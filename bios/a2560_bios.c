@@ -18,7 +18,7 @@
 
 #include "emutos.h"
 
-#if defined(MACHINE_A2560U) || defined(MACHINE_A2560X) || defined(MACHINE_A2560K) || defined(MACHINE_GENX) || defined(MACHINE_A2560M)
+#if defined(MACHINE_FOENIX)
 
 #include "portab.h"
 #include "aciavecs.h"
@@ -80,108 +80,6 @@ void a2560_bios_enable_irqs(void)
 }
 
 /* Video  ********************************************************************/
-#define VICKY_VIDEO_MODE_FLAG (1<<13) /* In the TOS video mode, indicates this is a VICKY mode */
-
-static int videl_to_foenix_mode(uint16_t videlmode)
-{
-    return videlmode & ~VICKY_VIDEO_MODE_FLAG;
-}
-
-
-static int foenix_to_videl_mode(uint16_t foenixmode)
-{
-    return foenixmode | VICKY_VIDEO_MODE_FLAG;
-}
-
-
-void a2560_bios_screen_init(void)
-{
-    KDEBUG(("a2560_bios_screen_init\n"));
-
-    vicky2_init();
-
-    /* Setup VICKY interrupts handler (VBL, HBL etc.) */
-    vblsem = 0;
-
-#if CONF_WITH_A2560U_SHADOW_FRAMEBUFFER
-    a2560_sfb_init();
-#endif
-
-    a2560_irq_set_handler(INT_SOF_A, int_vbl);
-    KDEBUG(("a2560_bios_screen_init exiting\n"));
-}
-
-
-void a2560_bios_get_current_mode_info(uint16_t *planes, uint16_t *hz_rez, uint16_t *vt_rez)
-{
-    FOENIX_VIDEO_MODE mode;
-
-    vicky2_read_video_mode(vicky, &mode);
-    *planes = mode.bpp; /* We have 8bits per pixel */
-    *hz_rez = mode.w;
-    *vt_rez = mode.h;
-    KDEBUG(("a2560_bios_get_current_mode_info setting hz_rez:%d vt_rez:%d from mode %d\n", *hz_rez, *vt_rez, mode.id));
-}
-
-
-uint8_t *a2560_bios_physbase(void)
-{
-    KDEBUG(("a2560_bios_physbase: %p\n", vicky2_get_bitmap_address(vicky, 0) + VRAM_Bank0));
-    return vicky2_get_bitmap_address(vicky, 0) + VRAM_Bank0;
-}
-
-
-int16_t a2560_bios_vmontype(void)
-{
-    KDEBUG(("a2560_bios_vmontype\n"));
-    return MON_VGA; /* VGA. 5 (DVI) would be more correct but is only known for CT60/Radeon so probably not known about by a lot of software */
-}
-
-
-int32_t a2560_bios_vgetsize(int16_t videlmode)
-{
-    int foenix_mode_nr;
-    FOENIX_VIDEO_MODE *foenix_mode;
-
-    foenix_mode_nr = videl_to_foenix_mode(videlmode);
-    foenix_mode = (FOENIX_VIDEO_MODE*)&vicky->video_modes[foenix_mode_nr];
-    KDEBUG(("a2560_bios_vgetsize returns %ld\n", (uint32_t)foenix_mode->w * (uint32_t)foenix_mode->h));
-    return  (uint32_t)foenix_mode->w * (uint32_t)foenix_mode->h; /* 1 byte = 1 pixel on the Foenix, easy */
-}
-
-
-uint32_t a2560_bios_calc_vram_size(void)
-{
-    FOENIX_VIDEO_MODE mode;
-    vicky2_read_video_mode(vicky, &mode);
-    KDEBUG(("a2560_bios_calc_vram_size returns mode:%d, size=%ld\n", mode.id, mode.w * mode. h + EXTRA_VRAM_SIZE));
-    return (uint32_t)mode.w * (uint32_t)mode. h + EXTRA_VRAM_SIZE;
-}
-
-
-/* Also acts as Vsetscreen */
-void a2560_bios_setrez(int16_t rez, int16_t mode)
-{
-    if (rez != FALCON_REZ)
-        return;
-
-    KDEBUG(("a2560_bios_setrez(%d, %d)\n", rez, mode));
-    vicky2_set_video_mode(vicky, videl_to_foenix_mode(mode));
-}
-
-
-uint16_t a2560_bios_vsetmode(int16_t mode)
-{
-    FOENIX_VIDEO_MODE fm;
-    KDEBUG(("a2560_bios_vsetmode(%d)\n",mode));
-
-    if (mode != -1 && (mode & VICKY_VIDEO_MODE_FLAG))
-        vicky2_set_video_mode(vicky, mode);
-
-    vicky2_read_video_mode(vicky, &fm);
-    KDEBUG(("a2560_bios_vsetmode returns %d\n", foenix_to_videl_mode(fm.id)));
-    return foenix_to_videl_mode(fm.id);
-}
 
 
 void a2560_bios_vsetrgb(int16_t index,int16_t count,const uint32_t *rgb)
@@ -220,6 +118,8 @@ void a2560_bios_vgetrgb(int16_t index,int16_t count,uint32_t *rgb) {
 }
 
 
+
+
 /* Serial port ***************************************************************/
 
 uint32_t a2560_bios_bcostat1(void)
@@ -230,6 +130,7 @@ uint32_t a2560_bios_bcostat1(void)
 void a2560_bios_bconout1(uint8_t byte)
 {
     uart16550_put((UART16550*)UART1,&byte, 1);
+	uart16550_put((UART16550*)UART2,&byte, 1);
 }
 
 void a2560_irq_com1(void); // Event handler in a2560_s.S
@@ -334,12 +235,12 @@ void a2560_bios_xbtimer(uint16_t timer, uint16_t control, uint16_t data, void *v
         return;
     }
     /* Quantity of 2.4576MHz ticks before the timer fires */
-    frequency = mfp_timer_prediv[frequency];
+    frequency = mfp_timer_prediv[frequency]; // FIXME something wrong here "frequency is not initialised"
     if (data != 0)
         frequency *= data;
 
     /* Convert that according to our timer's clock */
-    timer_clock = timer == 3 ? vicky_vbl_freq : 20000000/*TODO use cpu_freq*/;
+    timer_clock = timer == 3 ? vicky_vbl_freq : CPU_FREQ;
     frequency = (frequency * timer_clock) / MFP68901_FREQ;
 
     a2560_set_timer(timer, frequency, false, vector);
@@ -415,6 +316,9 @@ void a2560_bios_sfb_setup(uint8_t *addr, uint16_t text_cell_height)
 
 extern const CONOUT_DRIVER a2560_conout_text;
 extern const CONOUT_DRIVER a2560_conout_bmp;
+#if defined(MACHINE_A2560M)
+extern const CONOUT_DRIVER a2560_conout_bmp_1bpp;;
+#endif
 
 CONOUT_DRIVER *a2560_bios_get_conout(void)
 {
@@ -430,15 +334,20 @@ CONOUT_DRIVER *a2560_bios_get_conout(void)
         a2560_bios_sfb_is_active = false;
         driver =  (CONOUT_DRIVER*)&a2560_conout_text;
     }
-# if CONF_WITH_A2560U_SHADOW_FRAMEBUFFER
     else
     {
         a2560_debugnl("a2560_bios_get_conout selected the BITMAP driver %p", v_bas_ad);
         /* Use the shadow framebuffer */
+#if defined(MACHINE_A2560M)
+        driver = (CONOUT_DRIVER*)&a2560_conout_bmp_1bpp;
+#else
         driver = (CONOUT_DRIVER*)&a2560_conout_bmp;
-        a2560_sfb_setup(v_bas_ad, v_cel_ht);
-    }
 #endif
+# if CONF_WITH_A2560_SHADOW_FRAMEBUFFER
+        a2560_sfb_setup(v_bas_ad, v_cel_ht);
+#endif
+    }
+
     if (driver == NULL)
         panic("Cannot select conout driver\n");
 
@@ -448,7 +357,6 @@ CONOUT_DRIVER *a2560_bios_get_conout(void)
 /** Perform initialisation for the screen to be ready to support text mode (vs bitmap text)
  * This should setup a font, the cursor, the colors of the text mode.
  * It doesn't need to clear the screen.
- * I'm not sure if it should set the video mode, as this may compete with screen_init_mode()
  */
 void a2560_bios_text_init(void)
 {
@@ -458,20 +366,10 @@ void a2560_bios_text_init(void)
     a2560_debugnl("a2560_bios_text_init: vicky2_set_text_lut");
     vicky2_set_text_lut(vicky, text_palette, text_palette);
 
-    int i;
     volatile uint8_t *c = vicky->text_memory->color;
     volatile uint8_t *t = vicky->text_memory->text;
-    uint8_t color = (uint8_t)(v_col_fg << 4 | v_col_fg);
 
     a2560_debugnl("color_mem:%p text_mem:%p",c,t);
-
-    #if 0 // that shouldn't be necessary. The terminal will be cleared later */
-    for (i = 0 ; i < VICKY_TEXT_SIZE ; i++)
-    {
-         *c++ = color;
-         *t++ = ' ';
-    }
-    #endif
 
     /* Set cursor */
     vicky->ctrl->cursor_control = 0;
@@ -549,4 +447,4 @@ void a2560_bios_bconout3(uint8_t byte)
 
 #endif // CONF_WITH_MPU401
 
-#endif /* defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX) */
+#endif /* defined(MACHINE_FOENIX) */

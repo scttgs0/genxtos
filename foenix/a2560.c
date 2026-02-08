@@ -1,7 +1,7 @@
 /*
- * a2560 - Foenix Retro Systems A2560U specific functions
+ * a2560 - Foenix Retro Systems A2560 specific functions
  *
- * Copyright (C) 2013-2023 The EmuTOS development team
+ * Copyright (C) 2013-2026 The EmuTOS development team
  *
  * Authors:
  *  VB   Vincent Barrilliot
@@ -180,7 +180,7 @@ extern void a2560_irq_mpu401(void);
 void (*mpu401_rx_handler)(uint8_t byte);
 
 void a2560_midi_init(uint32_t (*timer)(void),uint16_t timeout) {
-    a2560_debugnl("a2560_midi_init");
+    a2560_debugnl("a2560_midi_init(...,%d)",timeout);
     a2560_irq_disable(INT_MIDI);
     mpu401_set_timeout(timer, timeout);
     mpu401_rx_handler = (void(*)(uint8_t))a2560_rts;

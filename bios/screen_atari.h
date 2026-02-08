@@ -28,22 +28,24 @@
 /* 16 color palette 0x0RGB format (4 bits per component) */
 extern const UWORD default_palette[];
 
-void screen_atari_init_mode(void);
+void screen_atari_init(void);
+
+extern const SCREEN_DRIVER screen_driver_atari;
 
 /* Resolution-related */
-int shifter_screen_can_change_resolution(void);
+WORD shifter_screen_can_change_resolution(void);
 WORD shifter_get_monitor_type(void);
 void atari_setrez(WORD rez, WORD videlmode);
 WORD atari_getrez(void);
 void atari_setphys(const UBYTE *addr);
 const UBYTE *atari_physbase(void);
-WORD atari_check_moderez(WORD moderez);
 ULONG atari_calc_vram_size(void);
 void atari_get_current_mode_info(UWORD *planes, UWORD *hz_rez, UWORD *vt_rez);
 
 /* Color-palette-related*/
 WORD atari_get_palette(void);
 WORD atari_setcolor(WORD colorNum, WORD color);
+void initialise_palette_registers_atari(WORD rez, WORD mode);
 void fixup_ste_palette(WORD rez);
 void initialise_ste_palette(UWORD mask);
 

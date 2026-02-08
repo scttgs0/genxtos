@@ -361,11 +361,15 @@ void *srealloc(long amount)
     LONG available;
     BOOL realloc;   /* TRUE iff reallocation is possible */
 
+#if CONF_WITH_VIDEL
     if (!has_videl)
         return (void *)EINVFN;
+#endif
 
-    if (video_ram_size == 0)    /* unspecified */
+#if CONF_VRAM_ADDRESS
+    if (video_ram_size == VIDEO_RAM_SIZE_UNSPECIFIED)    /* unspecified */
         return NULL;
+#endif
 
     /*
      * first, calculate available video ram size
@@ -406,8 +410,10 @@ void *srealloc(long amount)
         return NULL;
 
     /* round request up to next 256 bytes, then add extra, just like TOS */
+    /* TODO: does this need to be conditionned to Atari hardware ? */
     amount = (amount + 255UL) & ~255UL;
     amount += EXTRA_VRAM_SIZE;
+
     if (amount > available)
         return NULL;
 

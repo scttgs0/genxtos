@@ -35,19 +35,39 @@
 #define RGB_LTYELLOW  0x0ff3
 #define RGB_WHITE     0x0fff
 
+typedef struct {
+    void (*init)(void); /* Most basic setup */
+    ULONG (*calc_vram_size)(void); /* Calculate the size of the video ram */
+    WORD (*check_moderez)(WORD moderez);
+    void (*initialise_palette_registers)(WORD rez, WORD mode);
+    WORD (*can_change_resolution)(void);
+    void (*get_current_mode_info)(UWORD *planes, UWORD *width, UWORD *height);
+    void (*setphys)(const UBYTE *addr);
+    WORD (*get_monitor_type)(void);
+    WORD (*get_number_of_colors_nuances)(void);
+    void (*get_pixel_size)(WORD *width,WORD *height);
+    UBYTE *(*physbase)(void);
+    /* Try behave like SetScreen but may behave video-hardware specific based on rez/videomode (as CT60/Milan overloads of this) */
+    WORD (*setscreen)(UBYTE *logical, const UBYTE *physical, WORD rez, WORD videlmode);
+    WORD (*setcolor)(WORD colorNum, WORD color);
+    void (*set_palette)(const UWORD *new_palette); /* Colors are 4bits (Atari STe-compatible .... rRRR gGGG bBBB  ) */
+} SCREEN_DRIVER;
 
+/* This flag indicate that an emulator (like hatari or STEEm) have manipulated the Line-A variables to simulate a bigger screen than what the Atari hardware can support */
+extern char rez_was_hacked;
 
 /* Called when we detect that a different monitor is plugged */
 void screen_detect_monitor_change(void);
 
-/* set screen address, mode, ... */
-void screen_init_address(void);
-void screen_init_mode(void);
+/* Setup some sensible screen defaults */
+void screen_init(void);
 void screen_init_services_from_mode_info(void);
 void screen_setphys(const UBYTE *addr);
 void screen_set_rez_hacked(void);
-void screen_get_current_mode_info(UWORD *planes, UWORD *hz_rez, UWORD *vt_rez);
-void screen_do_set_palette(UWORD *new_palette);
+void screen_do_set_palette(const UWORD *new_palette);
+
+/* This factors some code for screen drivers */
+void get_std_pixel_size(WORD *width,WORD *height);
 
 /* hardware-independent xbios routines */
 const UBYTE *physbase(void);

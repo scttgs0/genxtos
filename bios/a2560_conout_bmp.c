@@ -1,8 +1,8 @@
 /*
- * a2560_conout_bmp.c - VICKY framebuffer mode driver
+ * a2560_conout_bmp.c - VICKY2 framebuffer mode driver
  *
  *
-  * Copyright (C) 2022 The EmuTOS development team
+  * Copyright (C) 2026 The EmuTOS development team
  *
  * Authors:
  *  VB      Vincent Barrilliot
@@ -20,7 +20,7 @@
 
 #include "emutos.h"
 
-#ifdef MACHINE_A2560U
+#if defined(MACHINE_FOENIX)
 
 #include "asm.h"
 #include "lineavars.h"
@@ -124,7 +124,7 @@ static void cell_xfer(CHAR_ADDR src, CHAR_ADDR dst)
         src.pxaddr += v_fnt_wr;
     }
 
-#if CONF_WITH_A2560U_SHADOW_FRAMEBUFFER
+#if CONF_WITH_A2560_SHADOW_FRAMEBUFFER && 0
     a2560_sfb_mark_cell_dirty(dst.pxaddr);
 #endif
 }
@@ -134,7 +134,7 @@ static void neg_cell(CHAR_ADDR cell)
 {
     const int inc = v_lin_wr - 3 * sizeof(UWORD);
     int i;
-#if CONF_WITH_A2560U_SHADOW_FRAMEBUFFER
+#if CONF_WITH_A2560_SHADOW_FRAMEBUFFER && 0
     UBYTE *c = cell.pxaddr;
 #endif
 
@@ -151,7 +151,7 @@ static void neg_cell(CHAR_ADDR cell)
         cell.pxaddr += inc;
     }
 
-#if CONF_WITH_A2560U_SHADOW_FRAMEBUFFER
+#if CONF_WITH_A2560_SHADOW_FRAMEBUFFER && 0
     a2560_sfb_mark_cell_dirty(c);
 #endif
 }
@@ -218,7 +218,7 @@ static void blank_out(int topx, int topy, int botx, int boty)
         addr += offs;       /* skip non-region area with stride advance */
     }
 
-#if CONF_WITH_A2560U_SHADOW_FRAMEBUFFER
+#if CONF_WITH_A2560_SHADOW_FRAMEBUFFER && 0
     a2560_sfb_mark_screen_dirty();
 #endif
 }
@@ -281,4 +281,4 @@ const CONOUT_DRIVER a2560_conout_bmp =
     0L, /* Use default method for blinking */
 };
 
-#endif /* MACHINE_A2560U */
+#endif /* MACHINE_FOENIX */

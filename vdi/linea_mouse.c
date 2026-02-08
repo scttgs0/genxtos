@@ -49,7 +49,9 @@ static void vbl_draw(void);
 #endif
 
 
-#if !WITH_AES
+#if WITH_AES
+#include "../aes/aesstub.h"
+#else
 /* The AES has all the mouse forms, which may even be customized.
  * If it's there we use it otherwise we fallback on the default arrow cursor
  * provided by the Line-A */

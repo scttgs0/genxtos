@@ -51,7 +51,7 @@
 /*#define VICKY_A_CURSOR_POS          (VICKY+0x0014) */ /* Cursor position */
     #define VICKY_CURSOR_X          0x0000ffff
     #define VICKY_CURSOR_Y          0xffff0000
-/*#define VICKY_B_BG_COLOR            (VICKY+0x000C) */ /* Background control */
+#define VICKY_B_BG_COLOR            (VICKY+0x000C)  /* Background control */
 /*#define VICKY_A_BMP0_FG_CTRL        (VICKY+0x0100) */ /* Bitmap layer 0 control */
 /*#define VICKY_A_BMP0_FB             (VICKY+0x0104) */ /* Bitmap layer 0 framebuffer address relative to VRAM */
 /*#define VICKY_A_BMP1_FG_CTRL        (VICKY+0x0108) */ /* Bitmap layer 1 control */

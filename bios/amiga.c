@@ -713,9 +713,9 @@ void amiga_setphys(const UBYTE *addr)
     amiga_screenbase = addr;
 }
 
-const UBYTE *amiga_physbase(void)
+static UBYTE *amiga_physbase(void)
 {
-    return amiga_screenbase;
+    return (UBYTE *)amiga_screenbase;
 }
 
 WORD amiga_setcolor(WORD colorNum, WORD color)
@@ -771,6 +771,64 @@ WORD amiga_vgetmode(void)
 
     return mode;
 }
+
+static WORD amiga_screen_can_change_resolution(void) { return TRUE; }
+static void amiga_initialise_palette_registers(WORD rez, WORD mode) { }
+static WORD amiga_get_monitor_type(void) { return MON_MONO;    /* fake monochrome monitor */ }
+static WORD amiga_get_number_of_colors_nuances(void) { return 2; /* we currently only support monochrome */ }
+static WORD amiga_setscreen(UBYTE *logical, const UBYTE *physical, WORD rez, WORD videlmode)
+{
+    WORD oldmode = 0;
+
+    if ((LONG)logical > 0) {
+        v_bas_ad = logical;
+        KDEBUG(("v_bas_ad = %p\n", v_bas_ad));
+    }
+    if ((LONG)physical > 0) {
+        screen_setphys(physical);
+    }
+
+    /* forbid res changes if Line A variables were 'hacked' or 'rez' is -1 */
+    if (rez_was_hacked || (rez == -1)) {
+        return 0;
+    }
+
+    /* return error for requests for invalid resolutions */
+    if ((rez < MIN_REZ) || (rez > MAX_REZ)) {
+        KDEBUG(("invalid rez = %d\n", rez));
+        return -1;
+    }
+
+    /* May not be required but is nicer */
+     vsync();
+    amiga_setrez(rez, videlmode);
+
+    screen_init_services_from_mode_info();
+
+    return oldmode;
+}
+
+static void amiga_set_palette(const UWORD *new_palette)
+{
+        // Not supported yet
+}
+
+const SCREEN_DRIVER screen_driver_amiga = {
+    amiga_screen_init,
+    amiga_initial_vram_size,
+    amiga_check_moderez,
+    amiga_initialise_palette_registers,
+    amiga_screen_can_change_resolution,
+    amiga_get_current_mode_info,
+    amiga_setphys,
+    amiga_get_monitor_type,
+    amiga_get_number_of_colors_nuances,
+    get_std_pixel_size,
+    amiga_physbase,
+    amiga_setscreen,
+    amiga_setcolor,
+    amiga_set_palette
+};
 
 /******************************************************************************/
 /* IKBD                                                                       */

@@ -4,7 +4,7 @@
 #include "foenix.h"
 
 /* SD card support */
-struct gavin_sdc_controller_t 
+struct __attribute__((__packed__)) gavin_sdc_controller_t
 {
     uint8_t version;
     uint8_t control;

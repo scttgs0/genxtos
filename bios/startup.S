@@ -62,7 +62,7 @@ amiga_main:
     // fall through os_entry
 #endif
 
-#if (defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)) && !EMUTOS_LIVES_IN_RAM
+#if defined(MACHINE_FOENIX) && !EMUTOS_LIVES_IN_RAM
 #if 1
     // This is disabled because running EmuTOS from flash bank0 (0xe00000) can lead to problems because the A2560U
     // crashes if we try to run user code from there. This is an issue e.g. for running EmuCON from flash.
@@ -135,7 +135,7 @@ _realmain:
         // Disable the interrupts
         // this is useless on cold boot, but it matters for software reset
         move    #0x2700,sr
-
+    
         // Initialize an early stack to a valid write address.
         // We use early exceptions for 2 reasons:
         // - detect CPU type and features with illegal instructions
@@ -146,10 +146,6 @@ _realmain:
         // point to actual memory. It is only required that the CPU will
         // not cause a second exception when writing to that address.
         // The exception handlers use a register as return address.
-        // It must never be assumed that this early stack can be used to store any data.
-        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        // [VB] THAT IS ASSUMED NOW. If the RAM is not minimally functional, how could we 
-        // even store vectors we use during CPU detection ?
         
         // We take this opportunity to set the stack pointer to the
         // address which will become our BIOS stack after memconf.

@@ -63,7 +63,7 @@ void startup(void) {
     initialize_cpu();
 
     run_user_reset_code();
-
+	
     meminit(startup_stage2);
     // meminit returns into startup_stage2 in a hardcoded way, because we can't rely on the stack or 
     // registes to remember a return address: all the memory is clobbererd and registers as well.

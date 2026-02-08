@@ -17,6 +17,7 @@
 #include "emutos.h"
 #include "asm.h"
 #include "bios.h"
+#include "bdosbind.h" /* FIXME layering breackage: Srealloc */
 #include "biosext.h"
 #include "country.h"
 #include "dmasound.h"
@@ -54,7 +55,7 @@ static WORD shifter_check_moderez(WORD moderez);
  * before memory configuration. This is not used here, and all is
  * done at the same time from C.
  */
-void screen_atari_init_mode(void) {
+void screen_atari_init(void) {
 #if CONF_WITH_VIDEL
     UWORD boot_resolution = FALCON_DEFAULT_BOOT;
 #endif
@@ -191,6 +192,32 @@ void screen_atari_init_mode(void) {
 
 }
 
+
+void initialise_palette_registers_atari(WORD rez, WORD mode)
+{
+    UWORD mask;
+
+    if (HAS_VIDEL || HAS_TT_SHIFTER || HAS_STE_SHIFTER)
+        mask = 0x0fff;
+    else
+        mask = 0x0777;
+
+    initialise_ste_palette(mask);
+
+    if (FALSE) {
+        /* Dummy case for conditional compilation */
+    }
+#if CONF_WITH_VIDEL
+    else if (has_videl)
+        initialise_falcon_palette(mode);
+#endif
+#if CONF_WITH_TT_SHIFTER
+    else if (has_tt_shifter)
+        initialise_tt_palette(rez);
+#endif
+
+    fixup_ste_palette(rez);
+}
 
 /* Settings for the different video modes */
 struct video_mode {
@@ -337,7 +364,7 @@ const UBYTE *atari_physbase(void)
 ULONG atari_calc_vram_size(void)
 {
     ULONG vram_size;
-    WORD planes, w, h;
+    UWORD planes, w, h;
 
 #if CONF_WITH_VIDEL
     if (has_videl)
@@ -355,7 +382,7 @@ ULONG atari_calc_vram_size(void)
     }
 #endif
 
-    screen_get_current_mode_info(&planes, &w, &h);
+    atari_get_current_mode_info(&planes, &w, &h);
     vram_size = (ULONG)(w / 8 * planes) * h;
 
     /* TT TOS allocates 256 bytes more than actually needed. */
@@ -600,7 +627,7 @@ static WORD shifter_check_moderez(WORD moderez)
     return (return_rez==getrez())?0:(0xff00|return_rez);
 }
 
-int shifter_screen_can_change_resolution(void)
+WORD shifter_screen_can_change_resolution(void)
 {
     int rez = Getrez();     /* we might be in running in user mode */
 
@@ -609,6 +636,21 @@ int shifter_screen_can_change_resolution(void)
 
     return (rez != ST_HIGH);    /* can't change if mono monitor */
 }
+
+static WORD screen_can_change_resolution_atari(void)
+{
+    if (rez_was_hacked)
+        return FALSE;
+
+#if CONF_WITH_VIDEL
+    if (has_videl)  /* can't change if real ST monochrome monitor */
+        return (VgetMonitor() != MON_MONO);
+#endif
+
+    return shifter_screen_can_change_resolution();
+}
+
+
 
 WORD shifter_get_monitor_type(void)
 {
@@ -621,7 +663,7 @@ WORD shifter_get_monitor_type(void)
 }
 
 
-WORD atari_check_moderez(WORD moderez)
+static WORD atari_check_moderez(WORD moderez)
 {
 #if CONF_WITH_VIDEL
     if (has_videl)
@@ -629,4 +671,136 @@ WORD atari_check_moderez(WORD moderez)
 #endif
     return shifter_check_moderez(moderez);
 }
+
+
+static WORD atari_get_monitor_type(void)
+{
+#if CONF_WITH_VIDEL
+    if (has_videl)
+        return vmontype();
+#endif
+    return shifter_get_monitor_type();
+}
+
+static void atari_get_pixel_size(WORD *width,WORD *height) {
+    if (HAS_VIDEL || HAS_TT_SHIFTER)
+        get_std_pixel_size(width,height);
+    else
+    {
+        /* ST TOS has its own set of magic numbers */
+        if (5 * V_REZ_HZ >= 12 * V_REZ_VT)  /* includes ST medium */
+            *width = 169;
+        else if (V_REZ_HZ >= 480)   /* ST high */
+            *width = 372;
+        else *width = 338;          /* ST low */
+        *height = 372;
+    }
+}
+
+static WORD atari_setscreen(UBYTE *logLoc, const UBYTE *physLoc, WORD rez, WORD videlmode) {
+    WORD oldmode = 0;
+
+    if ((LONG)logLoc > 0) {
+        v_bas_ad = logLoc;
+        KDEBUG(("v_bas_ad = %p\n", v_bas_ad));
+    }
+    if ((LONG)physLoc > 0) {
+        screen_setphys(physLoc);
+    }
+
+    /* forbid res changes if Line A variables were 'hacked' or 'rez' is -1 */
+    if (rez_was_hacked || (rez == -1)) {
+        return 0;
+    }
+
+    /* return error for requests for invalid resolutions */
+    if ((rez < MIN_REZ) || (rez > MAX_REZ)) {
+        KDEBUG(("invalid rez = %d\n", rez));
+        return -1;
+    }
+
+#if CONF_WITH_VIDEL
+    /*
+     * if we have videl, and this is a mode change request:
+     * 1. fixup videl mode
+     * 2. reallocate screen memory & update logical/physical screen addresses
+     */
+    if (has_videl) {
+        if (rez == FALCON_REZ) {
+            if (videlmode != -1) {
+                videlmode = vfixmode(videlmode);
+                if (!logLoc && !physLoc) {
+                    UBYTE *addr = (UBYTE *)Srealloc(vgetsize(videlmode)); /* TODO layering breakage: XBIOS calling GEMDOS */
+                    if (!addr) {      /* Srealloc() failed */
+                        KDEBUG(("Srealloc() failed\n"));
+                        return -1;
+                    }
+                    KDEBUG(("screen realloc'd to %p\n", addr));
+                    v_bas_ad = addr;
+                    screen_setphys(addr);
+                }
+            }
+            oldmode = vsetmode(-1);
+        }
+    }
+#endif
+
+    /* Wait for the end of display to avoid the plane-shift bug on ST */
+    vsync();
+
+    atari_setrez(rez, videlmode);
+
+    screen_init_services_from_mode_info();
+
+    return oldmode;
+}
+
+static void atari_set_palette(const UWORD *new_palette)
+{
+    // the contents of colorptr indicate the palette processing required; since
+    // the source address must be on a word boundary, we use bit 0 as a flag:
+    //  contents                 meaning
+    //  --------                 -------
+    //     0                     do nothing
+    //  address                  load ST(e) palette registers from address
+    //  address with flag set    load 16 Falcon palette registers from address
+    //     0 with flag set       load 256 Falcon palette registers from
+    //                             _falcon_shadow_palette
+    UWORD *palette_regs;
+    WORD palette_size;
+
+    if ((LONG)new_palette & 1) {
+        new_palette = (UWORD*)((LONG)new_palette & ~1); // Test & clear Falcon indicator
+#if CONF_WITH_VIDEL
+        palette_regs = (UWORD*)0xffff9800L;
+        palette_size = falcon_shadow_count - 1;
+#endif
+    }
+    else {
+        palette_regs = (UWORD*)0xffff8240L;
+        palette_size = 16/2 -1; // Number of colors of the Shifter (regardless of resolution) / 2 as we copy LONGS
+    }
+    // Copy the palette
+    do {
+        *((ULONG*)palette_regs++) = *((ULONG*)new_palette++);
+    } while (--palette_size >= 0); // Hope for dbra
+}
+
+const SCREEN_DRIVER screen_driver_atari = {
+    screen_atari_init,
+    atari_calc_vram_size,
+    atari_check_moderez,
+    initialise_palette_registers_atari,
+    screen_can_change_resolution_atari,
+    atari_get_current_mode_info,
+    atari_setphys,
+    atari_get_monitor_type,
+    atari_get_palette, /* get_number_of_colors_nuances */
+    atari_get_pixel_size,
+    atari_physbase,
+    atari_setscreen,
+    atari_setcolor,
+    screen_vicky2_set_palette
+};
+
 #endif

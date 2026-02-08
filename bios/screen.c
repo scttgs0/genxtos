@@ -13,7 +13,7 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-/* #define ENABLE_KDEBUG */
+#define ENABLE_KDEBUG
 
 #include "emutos.h"
 #include "asm.h"
@@ -35,6 +35,7 @@
 #include "xbiosbind.h" /* for Srealloc, which is a layering breakage ! (BIOS calling BDOS */
 #include "a2560_bios.h"
 
+#define HAS_VIDEO_HARDWARE (defined(MACHINE_AMIGA) || CONF_WITH_ATARI_VIDEO || defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX))
 
 LONG video_ram_size;        /* these are used by Srealloc() */
 void *video_ram_addr;
@@ -45,19 +46,24 @@ static void setup_video_ram(void);
 static ULONG calc_vram_size(void);
 static void screen_init_services(UWORD planes, UWORD xrez, UWORD yrez);
 
+// Select the driver
 #if CONF_WITH_ATARI_VIDEO
-#define screen_driver screen_driver_atari
+ #define screen_driver screen_driver_atari
 #elif defined(MACHINE_AMIGA)
-#define screen_driver screen_driver_amiga
+ #define screen_driver screen_driver_amiga
 #elif defined(MACHINE_LISA)
-#define screen_driver screen_driver_lisa
-#elif defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-#define screen_driver a2560_screen_driver_vicky2
+ #define screen_driver screen_driver_lisa
+#elif defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
+ extern const SCREEN_DRIVER a2560_screen_driver_vicky2;
+ #define screen_driver a2560_screen_driver_vicky2
+#elif defined(MACHINE_A2560M)
+ extern const SCREEN_DRIVER a2560_screen_driver_vicky3;
+ #define screen_driver a2560_screen_driver_vicky3
 #endif
 
 void screen_init(void) {
     /* Initialize the video mode and palette. The video memory address will be done later. */
-    screen_driver->init();
+    screen_driver.init();
 
     rez_was_hacked = FALSE; /* initial assumption */
 
@@ -89,7 +95,7 @@ WORD check_moderez(WORD moderez)
     if (!screen_can_change_resolution())
         return 0;
 
-    return screen_driver->check_moderez(moderez);
+    return screen_driver.check_moderez(moderez);
 }
 
 /*
@@ -98,9 +104,7 @@ WORD check_moderez(WORD moderez)
  */
 void initialise_palette_registers(WORD rez, WORD mode)
 {
-#if CONF_WITH_ATARI_VIDEO
-    initialise_palette_registers_atari(rez, mode);
-#endif /* CONF_WITH_ATARI_VIDEO */
+    screen_driver.initialise_palette_registers(rez, mode);
 }
 
 
@@ -127,7 +131,7 @@ static void setup_video_ram(void)
 
     /* set the v_bas_ad system variable */
     v_bas_ad = video_ram_addr;
-    KDEBUG(("v_bas_ad = %p, vram_size = %lu\n", v_bas_ad, video_ram_addr));
+    KDEBUG(("v_bas_ad = %p, vram_size = %p\n", v_bas_ad, video_ram_addr));
 }
 
 /*
@@ -153,32 +157,14 @@ WORD screen_can_change_resolution(void)
     if (rez_was_hacked)
         return FALSE;
 
-#ifdef MACHINE_AMIGA
-    return TRUE;
-#endif
-
-#if CONF_WITH_ATARI_VIDEO
-    return screen_can_change_resolution_atari();
-#else
-    return FALSE;
-#endif
+    return screen_driver.can_change_resolution();
 }
 
 
 /* get monitor type (same encoding as VgetMonitor()) */
 WORD get_monitor_type(void)
 {
-#if CONF_WITH_ATARI_VIDEO
-#if CONF_WITH_VIDEL
-    if (has_videl)
-        return vmontype();
-#endif
-    return shifter_get_monitor_type();
-#elif defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-    return a2560_bios_vmontype();
-#else
-    return MON_MONO;    /* fake monochrome monitor */
-#endif
+    return screen_driver.get_monitor_type();
 }
 
 
@@ -191,32 +177,9 @@ WORD get_monitor_type(void)
  */
 static ULONG calc_vram_size(void)
 {
-#ifdef MACHINE_AMIGA
-    return amiga_initial_vram_size();
-#elif defined(MACHINE_LISA)
-    return 32*1024UL;
-#elif defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-    return a2560_bios_calc_vram_size();
-#else
-    return atari_calc_vram_size();
-#endif
+    return screen_driver.calc_vram_size();
 }
 
-
-void screen_get_current_mode_info(UWORD *planes, UWORD *hz_rez, UWORD *vt_rez)
-{
-#ifdef MACHINE_AMIGA
-    amiga_get_current_mode_info(planes, hz_rez, vt_rez);
-#elif defined(MACHINE_LISA)
-    *planes = 1;
-    *hz_rez = 720;
-    *vt_rez = 364;
-#elif defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-    a2560_bios_get_current_mode_info(planes, hz_rez, vt_rez);
-#else
-    atari_get_current_mode_info(planes, hz_rez, vt_rez);
-#endif
-}
 
 /*
  * used by vdi_v_opnwk()
@@ -225,22 +188,12 @@ void screen_get_current_mode_info(UWORD *planes, UWORD *hz_rez, UWORD *vt_rez)
  */
 WORD get_palette(void)
 {
-#ifdef MACHINE_AMIGA
-    return 2;               /* we currently only support monochrome */
-#endif
-#if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-    /* All modes are 256 coloursVICKY can do 24bit but this function only returns 16 bits and
-     * the VDI, EmuDesk etc. don't support more than 256 colors.
-     * So we limit ourselves to 256 as it's done in videl.c */
-    return 256;
-#else
-    return atari_get_palette();
-#endif
+    return screen_driver.get_number_of_colors_nuances();
 }
 
 
 /* returns 'standard' pixel sizes */
-static __inline__ void get_std_pixel_size(WORD *width,WORD *height)
+void get_std_pixel_size(WORD *width,WORD *height)
 {
     *width = (V_REZ_HZ < 640) ? 556 : 278;  /* magic numbers as used */
     *height = (V_REZ_VT < 400) ? 556 : 278; /*  by TOS 3 & TOS 4     */
@@ -265,22 +218,7 @@ static __inline__ void get_std_pixel_size(WORD *width,WORD *height)
  */
 void get_pixel_size(WORD *width,WORD *height)
 {
-#if defined(MACHINE_AMIGA) || defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-    get_std_pixel_size(width,height);
-#else
-    if (HAS_VIDEL || HAS_TT_SHIFTER)
-        get_std_pixel_size(width,height);
-    else
-    {
-        /* ST TOS has its own set of magic numbers */
-        if (5 * V_REZ_HZ >= 12 * V_REZ_VT)  /* includes ST medium */
-            *width = 169;
-        else if (V_REZ_HZ >= 480)   /* ST high */
-            *width = 372;
-        else *width = 338;          /* ST low */
-        *height = 372;
-    }
-#endif
+    screen_driver.get_pixel_size(width, height);
 }
 
 
@@ -288,14 +226,8 @@ void get_pixel_size(WORD *width,WORD *height)
 
 const UBYTE *physbase(void)
 {
-#ifdef MACHINE_AMIGA
-    return amiga_physbase();
-#elif defined(MACHINE_LISA)
-    return lisa_physbase();
-#elif defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-    return a2560_bios_physbase();
-#elif CONF_WITH_ATARI_VIDEO
-    return atari_physbase();
+#if HAS_VIDEO_HARDWARE
+    return screen_driver.physbase();
 #else
     /* No real physical screen, fall back to Logbase() */
     return logbase();
@@ -307,12 +239,7 @@ const UBYTE *physbase(void)
 
 void screen_setphys(const UBYTE *addr)
 {
-    KDEBUG(("screen_setphys(%p)\n", addr));
-#if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-    a2560_setphys(addr);
-#elif
-    screen_driver->setphys(addr)
-#endif
+    screen_driver.setphys(addr);
 }
 
 
@@ -323,7 +250,7 @@ UBYTE *logbase(void)
 
 
 WORD getrez(void)
-{
+{ /* TODO should that be improved */
 #if CONF_WITH_ATARI_VIDEO
     return atari_getrez();
 #else
@@ -350,64 +277,7 @@ WORD getrez(void)
  */
 WORD setscreen(UBYTE *logLoc, const UBYTE *physLoc, WORD rez, WORD videlmode)
 {
-    WORD oldmode = 0;
-
-    if ((LONG)logLoc > 0) {
-        v_bas_ad = logLoc;
-        KDEBUG(("v_bas_ad = %p\n", v_bas_ad));
-    }
-    if ((LONG)physLoc > 0) {
-        screen_setphys(physLoc);
-    }
-
-    /* forbid res changes if Line A variables were 'hacked' or 'rez' is -1 */
-    if (rez_was_hacked || (rez == -1)) {
-        return 0;
-    }
-
-    /* return error for requests for invalid resolutions */
-    if ((rez < MIN_REZ) || (rez > MAX_REZ)) {
-        return -1;
-    }
-
-#if CONF_WITH_VIDEL
-    /*
-     * if we have videl, and this is a mode change request:
-     * 1. fixup videl mode
-     * 2. reallocate screen memory & update logical/physical screen addresses
-     */
-    if (has_videl) {
-        if (rez == FALCON_REZ) {
-            if (videlmode != -1) {
-                videlmode = vfixmode(videlmode);
-                if (!logLoc && !physLoc) {
-                    UBYTE *addr = (UBYTE *)Srealloc(vgetsize(videlmode));
-                    if (!addr)      /* Srealloc() failed */
-                        return -1;
-                    KDEBUG(("screen realloc'd to %p\n", addr));
-                    v_bas_ad = addr;
-                    screen_setphys(addr);
-                }
-            }
-            oldmode = vsetmode(-1);
-        }
-    }
-#endif
-
-    /* Wait for the end of display to avoid the plane-shift bug on ST */
-    vsync();
-
-#ifdef MACHINE_AMIGA
-    amiga_setrez(rez, videlmode);
-#elif defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-    a2560_bios_setrez(rez, videlmode);
-#elif CONF_WITH_ATARI_VIDEO
-    atari_setrez(rez, videlmode);
-#endif
-
-    screen_init_services_from_mode_info();
-
-    return oldmode;
+    return screen_driver.setscreen(logLoc, physLoc, rez, videlmode);
 }
 
 
@@ -433,7 +303,7 @@ void screen_init_services_from_mode_info(void)
 
     KDEBUG(("screen_init_services_from_mode_info\n"));
 
-    screen_get_current_mode_info(&planes, &xrez, &yrez);
+    screen_driver.get_current_mode_info(&planes, &xrez, &yrez);
     screen_init_services(planes, xrez, yrez);
 }
 
@@ -453,7 +323,7 @@ void setpalette(const UWORD *palettePtr)
     }
     KDEBUG((")\n"));
 #endif
-    /* next VBL will do this */
+    /* the flip will be initiated during the next VBL */
     colorptr = palettePtr;
 }
 
@@ -467,49 +337,8 @@ void setpalette(const UWORD *palettePtr)
  * 
  * It is called after the Setpalette xbios call is made.
  */
-void screen_do_set_palette(UWORD *new_palette) {
-
-#if (defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)) && 0
-    WORD i;
-    *VICKY_B_BG_COLOR = colorptr[0];
-    for (i=0; i<16; i++) {
-        uint32_t color = convert_atari2vicky_color(new_palette[i]);
-        if (i == 0) {
-            *VICKY_B_BG_COLOR = color;
-        }
-        else {
-            vicky2_set_lut_color(vicky, 0, i, color);
-        }
-    }
-#elif CONF_WITH_ATARI_VIDEO
-    // the contents of colorptr indicate the palette processing required; since
-    // the source address must be on a word boundary, we use bit 0 as a flag:
-    //  contents                 meaning
-    //  --------                 -------
-    //     0                     do nothing
-    //  address                  load ST(e) palette registers from address
-    //  address with flag set    load 16 Falcon palette registers from address
-    //     0 with flag set       load 256 Falcon palette registers from
-    //                             _falcon_shadow_palette
-    UWORD *palette_regs;
-    WORD palette_size;    
-
-    if ((LONG)new_palette & 1) {
-        new_palette = (UWORD*)((LONG)new_palette & ~1); // Test & clear Falcon indicator
-#if CONF_WITH_VIDEL
-        palette_regs = (UWORD*)0xffff9800L;
-        palette_size = falcon_shadow_count - 1;
-#endif
-    }
-    else {
-        palette_regs = (UWORD*)0xffff8240L;
-        palette_size = 16/2 -1; // Number of colors of the Shifter (regardless of resolution) / 2 as we copy LONGS
-    }
-    // Copy the palette
-    do {
-        *((ULONG*)palette_regs++) = *((ULONG*)new_palette++);
-    } while (--palette_size >= 0); // Hope for dbra
-#endif
+void screen_do_set_palette(const UWORD *new_palette) {
+    screen_driver.set_palette(new_palette);
 }
 
 
@@ -522,10 +351,8 @@ void screen_do_set_palette(UWORD *new_palette) {
  */
 WORD setcolor(WORD colorNum, WORD color)
 {
-#ifdef MACHINE_AMIGA
-    return amiga_setcolor(colorNum, color);
-#elif CONF_WITH_ATARI_VIDEO
-    return atari_setcolor(colorNum, color);
+#if HAS_VIDEO_HARDWARE
+    return screen_driver.setcolor(colorNum, color);
 #else
     /* No hardware, fake return value */
     return 0;

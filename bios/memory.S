@@ -648,6 +648,14 @@ call_bzero_a0_a1:
 // Clobbers:
 //   - Exception Vectors
 _detect_32bit_address_bus:
+ #if defined(MACHINE_A2560U)
+        clr.w   d0
+        rts
+ #elif defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
+        // This is hardcoded because the SDRAM/DDR issues would make it crash
+        move.w  #1,d0
+        rts
+ #else
         movem.l d2/a2-a4,-(sp)          // Save registers
         move.l  sp,a2                   // Save sp before exception
         move.l  #bus_detected,0x08      // Bus Error will just return
@@ -693,8 +701,8 @@ sync_data_cache:
         addq.l  #8,sp
 
         rts
-
-#endif
+ #endif
+#endif // CONF_WITH_ADVANCED_CPU
 
 #if CONF_WITH_MEMORY_TEST
 

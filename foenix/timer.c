@@ -147,7 +147,7 @@ void a2560_set_timer(uint16_t timer, uint32_t frequency, bool repeat, void *hand
 void a2560_timer_enable(uint16_t timer, bool enable)
 {
     struct a2560_timer_t *t = (struct a2560_timer_t *)&a2560_timers[timer];
-    a2560_debugnl("a2560_timer_enable(%d,%d)", timer, enable);
+	//    a2560_debugnl("a2560_timer_enable(%d,%s)", timer, enable==true?"true":"false");
     if (enable)
         R32(t->control) |= t->start;
     else
@@ -173,28 +173,39 @@ uint32_t a2560_delay_calibrate(uint32_t calibration_time)
 {
     uint16_t masks[IRQ_GROUPS];
     uint32_t old_timer_vector;
-    uint32_t irq_count;
+    uint32_t loop_count;
 
-    a2560_debugnl("a2560_delay_calibrate(0x%ldms)", calibration_time);
+    a2560_debugnl("a2560_delay_calibrate(%ldms)", calibration_time);
     /* We should disable timer 0 now but we really don't expect that anything uses it during boot */
 
     /* Backup all interrupts masks because they would interfere with measuring time */
     a2560_irq_mask_all(masks);
     old_timer_vector = R32(INT_TIMER0_VECN*4);
 
-    a2560_set_timer(0, 1000 /*1ms*/, true, a2560_irq_calibration);
-    irq_count = a2560_run_calibration(calibration_time);
-
+	/* It would be better to work with periods so we can have frequency < 1Hz. For now the calibration
+	 * time should be 1s maximum (which is plenty) */
+    a2560_set_timer(0, 1000/calibration_time, false, a2560_irq_calibration);
+	a2560_timer_enable(0, true);
+    loop_count = a2560_run_calibration(calibration_time);
+	
     /* Restore everything */
     R32(INT_TIMER0_VECN) = old_timer_vector;
     a2560_irq_restore(masks);
 
-    a2560_debugnl("irq_count (old)= 0x%08lx, calibration_interrupt_count = %ld", calibration_time, irq_count);
-    /* We have interrupts every 1ms so it's easy to count the number of tight loops per irq */
-    if (irq_count)
-        irq_count = calibration_time / irq_count;
+	if (loop_count == -1) {
+		// error, retry with smaller calibration time
+		a2560_debugnl("CPU was too fast (decounted 32bits in less than calibration time, retrying with smaller calibration time.");
+		return a2560_delay_calibrate(calibration_time*3/4);
+	}
 
-    a2560_debugnl("irq_count (new)= 0x%08lx", irq_count);
+    a2560_debugnl("loop_count (new)= 0x%08lx", loop_count);
+	
+	loop_count /= calibration_time;
+	/* We have interrupts every 1ms so it's easy to count the number of tight loops per irq */
+    //if (loop_count)
+    //    loop_count = calibration_time / loop_count;
 
-    return irq_count;
+    a2560_debugnl("loops for given calibration time=%08lx", loop_count);
+
+    return loop_count;
 }

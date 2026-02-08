@@ -40,11 +40,10 @@ extern UBYTE bootflags;
 #define BOOTFLAG_SKIP_HDD_BOOT 0x02
 #define BOOTFLAG_SKIP_AUTO_ACC 0x04
 
-/* Video RAM stuff */
-#if CONF_WITH_VIDEL
+/* Video RAM stuff, umem requires it */
+#define VIDEO_RAM_SIZE_UNSPECIFIED 0L
 extern LONG video_ram_size;
 extern void *video_ram_addr;
-#endif
 #define EXTRA_VRAM_SIZE 256UL   /* amount of video memory to overallocate, like Atari TOS */
 
 void flush_data_cache(void *start, long size);
@@ -81,7 +80,7 @@ extern void (*mousexvec)(WORD scancode);    /* Additional mouse buttons */
 WORD get_monitor_type(void);
 WORD get_palette(void);
 void get_pixel_size(WORD *width,WORD *height);
-int screen_can_change_resolution(void);
+WORD screen_can_change_resolution(void);
 WORD check_moderez(WORD moderez);
 void initialise_palette_registers(WORD rez,WORD mode);
 

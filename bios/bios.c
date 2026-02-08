@@ -245,12 +245,12 @@ static void bios_init(void)
     KDEBUG(("amiga_uae_init()\n"));
     amiga_uae_init();
 #endif
-
+	
     /* Initialize the processor */
     KDEBUG(("processor_init()\n"));
     processor_init();   /* Set CPU type, longframe and FPU type */
 	/* Initialise the trap interface of the Foenix library */
-
+	
 #if CONF_WITH_ADVANCED_CPU
     is_bus32 = (UBYTE)detect_32bit_address_bus();
 #endif
@@ -259,7 +259,7 @@ static void bios_init(void)
     /* Setup all CPU exception vectors */
     KDEBUG(("vecs_init()\n"));
     vecs_init();
-
+	
     /* Set 'reasonable' default values for delay */
     KDEBUG(("delay_init()\n"));
     delay_init();
@@ -268,6 +268,7 @@ static void bios_init(void)
     KDEBUG(("machine_detect()\n"));
     machine_detect();
 
+	
     /* Initialise machine-specific stuff */
     KDEBUG(("machine_init()\n"));
     machine_init();
@@ -336,12 +337,8 @@ static void bios_init(void)
     font_init();
 
     /* Set some sensible screen mode/resolution based on what's hooked to the computer */
-    KDEBUG(("screen_init_mode()\n"));
-    screen_init_mode();
-
-    /* Setup the video RAM / allocate it if necessary */
-    KDEBUG(("screen_init_address()\n"));
-    screen_init_address();
+    KDEBUG(("screen_init()\n"));
+    screen_init();
 
     /* Initialize the screen services (line-A and VT-52) */
     KDEBUG(("screen_init_services_from_mode_info()\n"));
@@ -476,12 +473,20 @@ static void bios_init(void)
     // To test if the delay is correct, send some indication every second
     for(;;) {
         int i;
-        for (i=0;i<1000;i++)
-            delay_loop(loopcount_1_msec);
-        *((volatile unsigned char * const)0xfec00b01) = '.';
+		unsigned long *beeper =(unsigned long*) 0xfec00000L;
+            delay_loop(loopcount_1_msec*1000);
+		
+		if (*beeper & 16)
+			*beeper = (*beeper & ~16);
+		else
+			*beeper |= 16;
+				*((volatile unsigned char * const)0xfec80008) += 0x11;
+		//        *((volatile unsigned char * const)0xfec00b01) = '.';
     }
 #endif
 
+    KDEBUG(("delay_calibrate done\n"));
+	
     /* Initialize the DSP.  Since we currently use the system timer
      * in dsp_execboot(), which is called from dsp_init(), the latter
      * must be called *after* system timer interrupts are enabled.

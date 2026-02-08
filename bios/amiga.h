@@ -13,6 +13,8 @@
 #ifndef AMIGA_H
 #define AMIGA_H
 
+#include "screen.h"
+
 #ifdef MACHINE_AMIGA
 
 struct IDE
@@ -46,6 +48,7 @@ extern UWORD amiga_screen_width;
 extern UWORD amiga_screen_width_in_bytes;
 extern UWORD amiga_screen_height;
 extern const UBYTE *amiga_screenbase;
+extern const SCREEN_DRIVER screen_driver_amiga;
 extern UWORD *copper_list;
 extern int has_gayle;
 
@@ -62,7 +65,6 @@ void amiga_screen_init(void);
 WORD amiga_check_moderez(WORD moderez);
 void amiga_get_current_mode_info(UWORD *planes, UWORD *hz_rez, UWORD *vt_rez);
 void amiga_setphys(const UBYTE *addr);
-const UBYTE *amiga_physbase(void);
 WORD amiga_setcolor(WORD colorNum, WORD color);
 void amiga_setrez(WORD rez, WORD videlmode);
 void amiga_kbd_init(void);

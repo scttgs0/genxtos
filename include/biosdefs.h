@@ -133,11 +133,11 @@ typedef struct
  */
 typedef void (*ETV_TIMER_T)(int ms); /* Type of BDOS Event Timer */
 
-/* standard Atari resolution values */
+/* standard Atari resolution values for Setscreen */
 #define ST_LOW          0   /* used for ST/STe */
 #define ST_MEDIUM       1
 #define ST_HIGH         2
-#define FALCON_REZ      3   /* used as a Falcon indicator */
+#define FALCON_REZ      3   /* used as a Falcon indicator, the real resolution is something else */
 #define TT_MEDIUM       4   /* used for TT */
 #define REZ_UNSUPPORTED 5
 #define TT_HIGH         6

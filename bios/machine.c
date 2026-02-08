@@ -641,10 +641,10 @@ void machine_detect(void)
  */
 void machine_init(void)
 {
-#if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
+#if defined(MACHINE_FOENIX)
     a2560_bios_init();
     /* There is an early setup of the UART so we can use KDEBUG earlier. */
-    //TODOboot_status |= RS232_AVAILABLE;
+    boot_status |= RS232_AVAILABLE;
 #endif
 
     /* Initialize the MFP, this ensures their IRQs are disabled */

@@ -1,6 +1,7 @@
 #!/bin/sh
-COM=/dev/ttyUSB1
-FNXMGR="python3 $FOENIXMGR/FoenixMgr/fnxmgr.py --port $COM"
+COM=/dev/ttyUSB0
+#FNXMGR="python3 $FOENIXMGR/FoenixMgr/fnxmgr.py --port $COM"
+FNXMGR="fnxmgr --port $COM"
 ROM=`ls emutos-a2560?.rom`
 echo "Uploading $ROM to memory through port $COM"
 #ldemutos.s28 is a simple program that sets the reset vector to 0x100000. There

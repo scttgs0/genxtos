@@ -133,6 +133,70 @@ const UBYTE *lisa_physbase(void)
     return logbase();
 }
 
+static ULONG lisa_calc_vram_size(void) {  return 32*1024UL; }
+static ULONG lisa_check_moderez(void) {  return 0; }
+static void lisa_initialise_palette_registers)(WORD rez, WORD mode) { }
+static WORD lisa_screen_can_change_resolution(void) { return FALSE }
+void lisa_get_current_mode_info(UWORD *planes, UWORD *width, UWORD *height) {
+    *planes = 1;
+    *width = 720;
+    *height = 364;
+}
+static WORD lisa_get_monitor_type(void) { return MON_MONO;    /* fake monochrome monitor */ }
+static WORD lisa_get_number_of_colors_nuances(void) { return 2; /* we currently only support monochrome */ }
+static WORD lisa_setscreen(UBYTE *logical, const UBYTE *physical, WORD rez, WORD videlmode)
+{
+    WORD oldmode = 0;
+
+    if ((LONG)logical > 0) {
+        v_bas_ad = logical;
+        KDEBUG(("v_bas_ad = %p\n", v_bas_ad));
+    }
+    if ((LONG)physical > 0) {
+        screen_setphys(physical);
+    }
+
+    /* forbid res changes if Line A variables were 'hacked' or 'rez' is -1 */
+    if (rez_was_hacked || (rez == -1)) {
+        return 0;
+    }
+
+    /* return error for requests for invalid resolutions */
+    if ((rez < MIN_REZ) || (rez > MAX_REZ)) {
+        KDEBUG(("invalid rez = %d\n", rez));
+        return -1;
+    }
+
+    /* May not be required but is nicer */
+    vsync();
+    lisa_setrez(rez, videlmode);
+
+    screen_init_services_from_mode_info();
+
+    return oldmode;
+}
+static void lisa_set_palette(const UWORD *new_palette)
+{
+        // Not supported yet
+}
+
+const SCREEN_DRIVER screen_driver_lisa = {
+    lisa_screen_init,
+    lisa_initial_vram_size,
+    lisa_check_moderez,
+    lisa_initialise_palette_registers,
+    lisa_screen_can_change_resolution,
+    lisa_get_current_mode_info,
+    lisa_setphys,
+    lisa_get_monitor_type,
+    lisa_get_number_of_colors_nuances,
+    get_std_pixel_size,
+    lisa_physbase,
+    lisa_setscreen,
+    lisa_set_palette
+};
+
+
 /******************************************************************************/
 /* COPS: Control Oriented Processor System                                    */
 /* Used as Keyboard/Mouse/Clock/Shutdown slave processor                      */

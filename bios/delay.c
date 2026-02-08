@@ -68,11 +68,11 @@ void delay_init(void)
 #elif defined(MACHINE_A2560U)
     /* The A2560U's 68EC000 is running at 20MHz while LOOPS_68000 is for 16MHz*/
     loopcount_1_msec = LOOPS_68000 * 5L / 4;
-#elif defined(MACHINE_A2560K) || defined(MACHINE_A2560X)
-    /* The A2560X's 68040V is running at 33MHz while LOOPS_68030 is for 32MHz*/
+#elif defined(MACHINE_A2560K) 
+    /* The A2560K's 68040V is running at 33MHz while LOOPS_68030 is for 32MHz*/
     loopcount_1_msec = LOOPS_68030 * 33L / 32;
-#elif defined(MACHINE_A2560M)
-    /* The A2560M 68LC060 is running at 33MHz, LOOPS_68060 assumes 110Mhz */
+#elif defined(MACHINE_A2560M) || defined(MACHINE_A2560X)
+    /* The A2560M 68xx060 is running at 33MHz, LOOPS_68060 assumes 110Mhz */
     loopcount_1_msec = LOOPS_68060 * 33L / 110;
 #else
 # if CONF_WITH_APOLLO_68080
@@ -100,18 +100,22 @@ void delay_init(void)
 
 /*
  * calibrate delay values: must only be called *after* interrupts are allowed
+ * This works by going into a tight loop (decrementing a counter) and counting how
+ * many timer interrupts we got during that time. From that we can compute the
+ * number of tight loops it takes to wait 1ms.
  *
- * NOTE1: we use TimerD so we restore the RS232 stuff
- * NOTE2: some systems (e.g. ARAnyM) do not implement TimerD; we leave
- *        the default delay values as-is in this case
  * NOTE3: ColdFire systems are not calibrated, since there is no
  *        independent clock that can be used to measure time
  */
 void delay_calibrate(void)
 {
-#if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-    loopcount_1_msec = a2560_delay_calibrate(CALIBRATION_TIME * loopcount_1_msec);
+#if defined(MACHINE_FOENIX)
+    loopcount_1_msec = a2560_delay_calibrate(CALIBRATION_TIME);
 #elif CONF_WITH_MFP
+	/* NOTE1: we use TimerD so we restore the RS232 stuff
+	 * NOTE2: some systems (e.g. ARAnyM) do not implement TimerD; we leave
+	 *        the default delay values as-is in this case
+	 */
     ULONG loopcount, intcount;
 
     /*

@@ -10,7 +10,7 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-/* #define ENABLE_KDEBUG */
+#define ENABLE_KDEBUG
 
 #include "emutos.h"
 #include "disk.h"
@@ -357,17 +357,23 @@ SPI_DRIVER *spi_driver;
 
     KDEBUG(("Initialising the SPI driver\n"));
     spi_driver->initialise();
+	KDEBUG(("Calling clock_ident\n"));
     spi_driver->clock_ident();
-
+	KDEBUG(("Wait 1ms\n"));
+	
     /* wait at least 1msec */
     for (i=0;i<10;i++) /* FatFS waits 10ms but EmuTOS only waits 1ms */
         DELAY_1_MSEC;
 
+	KDEBUG(("74 dummry clocks\n"));
+	
     /* send at least 74 dummy clocks with CS unasserted (high) */
     spi_driver->cs_unassert();
+	KDEBUG(("unasserted\n"));
     for (i = 0; i < 10; i++)
         spi_driver->send_byte(0xff);
 
+	KDEBUG(("cs_assert\n"));
     spi_driver->cs_assert();
 
     /*
@@ -386,6 +392,7 @@ SPI_DRIVER *spi_driver;
     /*
      *  determine card type, version, features
      */
+	KDEBUG(("determine card information\n"));
     sd_cardtype(card);
 	sd_features(card);
     KDEBUG(("sd_features: Card info: type %d, version %d, features 0x%02x\n", card->type,card->version,card->features));
@@ -591,7 +598,7 @@ static int sd_command(UBYTE cmd,ULONG argument,UBYTE crc,UBYTE resp_type,UBYTE *
     /* CRC is ignored by default in SPI mode ... but we always need a stop bit! */
     spi_driver->send_byte(crc|0x01);
 
-    KDEBUG(("cmd:%d %p\n", cmd, argument));
+    KDEBUG(("cmd:%d %p\n", cmd, (void*)argument));
 
     if (cmd == CMD12)                   /* stop transmission: */
         spi_driver->recv_byte();                /* always discard first byte */

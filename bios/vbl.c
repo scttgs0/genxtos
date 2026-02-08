@@ -12,7 +12,7 @@
 #include "vbl.h"
 #include "videl.h"
 
-#if CONF_WITH_A2560U_SHADOW_FRAMEBUFFER
+#if CONF_WITH_A2560_SHADOW_FRAMEBUFFER
 #include "a2560_bios.h"
 #include "../foenix/shadow_fb.h"
 #endif
@@ -21,7 +21,6 @@ extern PFVOID vbl_list[8]; /* Default array for the vblqueue TOS variable */
 
 // These are separate functions for clarity, but GCC will inline them.
 static void dump_screen(void);
-static void copy_palette(void);
 static void set_new_screen_address(void);
 static void process_vbl_queue(void);;
 
@@ -31,15 +30,12 @@ void vbl_handler(void);
 
 // Initialise the VBL stuff
 void vbl_init(void) {
+    int i;
     nvbls = ARRAY_SIZE(vbl_list);
     vblqueue = vbl_list;
-    {
-        int i;
-        for(i = 0 ; i < nvbls ; i++) {
-            vbl_list[i] = NULL;
-        }
+    for(i = 0 ; i < nvbls ; i++) {
+        vbl_list[i] = NULL;
     }
-
 }
 
 
@@ -51,12 +47,12 @@ void vbl_handler(void) {
     screen_detect_monitor_change();
 #endif
 
-#if !(defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)) || CONF_WITH_A2560U_SHADOW_FRAMEBUFFER /* If we have text mode only, VICKY takes care of the blinking */
+#if !(defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)) || CONF_WITH_A2560_SHADOW_FRAMEBUFFER /* If we have text mode only, VICKY takes care of the blinking */
     // blink cursor
     conout_blink_cursor();
 #endif
 
-#if CONF_WITH_A2560U_SHADOW_FRAMEBUFFER
+#if CONF_WITH_A2560_SHADOW_FRAMEBUFFER && 0 /* Disabled because I'm trying something different (write both to SRAM and VRAM )*/
     if (!a2560_bios_sfb_is_active) {
         a2560_sfb_addr = v_bas_ad;
         a2560_sfb_copy_fb_to_vram();
@@ -65,7 +61,7 @@ void vbl_handler(void) {
 
     // Support of Setpalette
     if (colorptr) {
-        screen_do_set_palette(colorptr);
+        screen_do_set_palette((const UWORD*)colorptr);
         colorptr = 0;
     }
 

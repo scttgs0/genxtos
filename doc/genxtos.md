@@ -42,7 +42,7 @@ The original EmuTOS was refactored so the conout.c (low level text driver) can u
 * a2560_conout_bmp : use the shadow frame buffer.
 
 The selection is done in a2560_bios_get_conout() based on the availability of the text mode and shadow framebuffer features.
-The shadow frame buffer availability is configured by CONF_WITH_A2560U_SHADOW_FRAMEBUFFER.
+The shadow frame buffer availability is configured by CONF_WITH_A2560_SHADOW_FRAMEBUFFER.
 The text mode support availability is configured by CONF_WITH_A2560_TEXT_MODE.
 If you have the shadow framebuffer enabled and not forcing the 8x8 font with CONF_WITH_FORCE_8x8_FONT, the bmp driver will be used.
 

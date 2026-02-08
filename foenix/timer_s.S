@@ -4,46 +4,41 @@
 
 #include "foenix.h"
 
-#if defined(MACHINE_A2560M)
-#define TIMER0_INT 0x0200
-#else
-#define TIMER0_INT 0x0100
-#endif
+#define TIMER0_MASK (1 << (INT_TIMER0 & 0x0f))
 
+
+// returns the number of tight loops done during the calibration time, or -1 if CPU went too fast
 _a2560_run_calibration: // Calibration loop
-    move.l  4(sp),d0 // Number of iterations before we stop the timer
-
-    // We should ideally be using a2560_timer_enable in this function but we don't because we
-    // don't want any overhead to get the most exact timings.
-    movem.l  d2-d4/a3,-(sp)
-    move.w  #~TIMER0_INT,IRQ_MASK_GRP1 // Mask everything except Timer 0
-
-    // Preload registers for the IRQ handler so it runs as fast as possible
-    move.w  #TIMER0_INT,d3
-    lea     IRQ_PENDING_GRP1,a3
-
-    clr.l   d4 // IRQ counter
-
-    // Enable timer 0 (cannot use RMW instruction)
-    move.l  TIMER_CTRL0,d1
-    move.l  d1,d2
-    ori.l   #1,d1   // d1: start
-    andi.l  #~1,d2  // d2: stop
-    move.l  d1,TIMER_CTRL0
+    move.l d2,-(sp)
+    clr.l  d0  // Tight loop iterations (de)counter (so to match delay_loop() 
+    clr.w  d2  // 
     
-cal_loop: // Replicate asm.h's delay_loop() function
+cal_loop: // Kind of replicate asm.h's delay_loop() function (though it uses jpl rather than jne)
+    // We're using jne so we can use the full 32bit range rather than 31bis. Less chances of this
+    // breaking if the CPU is too fast.
     subq.l  #1,d0
-    jpl     cal_loop
+    jne     cal_loop // asm.h uses jpl but it should be the same speed
 
-    // Disable timer 0, quick !
-    move.l  d2,TIMER_CTRL0
+    // If we're here, either the timer interrupted us, or the CPU was too fast and decounted
+    // faster than the calibration time.
     
-    move.l  d4,d0 // return value
-    movem.l (sp)+,d2-d4/a3
+    tst.w   d2 // who interrupted the loop ?
+    beq.s   cpu_too_fast
+
+    // the timer interrupted the loop
+    neg.l   d1    // cal_loop is a decounter
+    move.l  d1,d0 // return value
+    move.l  (sp)+,d2
+    rts
+cpu_too_fast:
+    moveq   #-1,d0 // return error code
+    move.l  (sp)+,d2
     rts
 
 
 _a2560_irq_calibration: // Timer 0 handler used for calibration loop, equivalent of handle_timer in delayasm.S
-    move.w d3,(a3)  // Acknowledge interrupt
-    addq.l #1,d4    // Increase interruption counter
+    move.w #TIMER0_MASK,IRQ_MASK_GRP1  // Acknowledge interrupt
+    move.l d0,d1   // save tight loop counter
+    move.l #2,d0   // make the cal_loop abort "soon"
+    scc    d2      // tell that the timer interrupted the loop
     rte

@@ -731,12 +731,12 @@
 # ifndef CONF_WITH_CHUNKY8
 #  define CONF_WITH_CHUNKY8 1
 # endif
-/* At least one of CONF_WITH_A2560_TEXT_MODE and CONF_WITH_A2560U_SHADOW_FRAMEBUFFER must be enabled */
+/* At least one of CONF_WITH_A2560_TEXT_MODE and CONF_WITH_A2560_SHADOW_FRAMEBUFFER must be enabled */
 /* Use VICKY's text mode if possible rather than a bitmap screen buffer when using 8 pixel-high font.
  * No graphics possible. */
 #define CONF_WITH_A2560_TEXT_MODE 1
 /* Shadow framebuffer support (e.g. for rendering 8x16). Safe/recommended to leave enabled. */
-#define CONF_WITH_A2560U_SHADOW_FRAMEBUFFER 1
+#define CONF_WITH_A2560_SHADOW_FRAMEBUFFER 1
 # ifndef CONF_WITH_FORCE_8x8_FONT
 #  define CONF_WITH_FORCE_8x8_FONT 1
 # endif
@@ -805,12 +805,12 @@
 # ifndef CONF_WITH_CHUNKY8
 #  define CONF_WITH_CHUNKY8 1
 # endif
-/* At least one of CONF_WITH_A2560_TEXT_MODE and CONF_WITH_A2560X_SHADOW_FRAMEBUFFER must be enabled */
+/* At least one of CONF_WITH_A2560_TEXT_MODE and CONF_WITH_A2560_SHADOW_FRAMEBUFFER must be enabled */
 /* Use VICKY's text mode if possible rather than a bitmap screen buffer when using 8 pixel-high font.
  * No graphics possible. */
 #define CONF_WITH_A2560_TEXT_MODE 1
 /* Shadow framebuffer support (e.g. for rendering 8x16). Safe/recommended to leave enabled. */
-#define CONF_WITH_A2560X_SHADOW_FRAMEBUFFER 0
+#define CONF_WITH_A2560_SHADOW_FRAMEBUFFER 0
 # ifndef CONF_WITH_FORCE_8x8_FONT
 #  define CONF_WITH_FORCE_8x8_FONT 1
 # endif
@@ -842,7 +842,7 @@
 #  define FOENIX_CHANNEL_A_DEBUG_PRINT 0
 # endif
 # ifndef FOENIX_COM3_DEBUG_PRINT
-#  define FOENIX_COM3_DEBUG_PRINT 3
+#  define FOENIX_COM3_DEBUG_PRINT 1
 # endif
 # ifndef CONF_ATARI_HARDWARE
 #  define CONF_ATARI_HARDWARE 0
@@ -874,22 +874,20 @@
 # ifndef CONF_WITH_MPU401
 #  define CONF_WITH_MPU401 1
 # endif
-#if 0
 # ifndef CONF_VRAM_ADDRESS
-#  define CONF_VRAM_ADDRESS 0x00c00000 /* VRAM is at a special location */
+#  define CONF_VRAM_ADDRESS 0x0c000000 /* VRAM is at a special location, must be in DDR3 memory. We set it right after the 8MB of static RAM */
 # endif
-#endif
 # ifndef CONF_WITH_CHUNKY8
-#  define CONF_WITH_CHUNKY8 1
+#  define CONF_WITH_CHUNKY8 0
 # endif
-/* At least one of CONF_WITH_A2560_TEXT_MODE and CONF_WITH_A2560X_SHADOW_FRAMEBUFFER must be enabled */
+/* At least one of CONF_WITH_A2560_TEXT_MODE and CONF_WITH_A2560_SHADOW_FRAMEBUFFER must be enabled */
 /* Use VICKY's text mode if possible rather than a bitmap screen buffer when using 8 pixel-high font.
  * No graphics possible. */
-#define CONF_WITH_A2560_TEXT_MODE 1
+#define CONF_WITH_A2560_TEXT_MODE 0
 /* Shadow framebuffer support (e.g. for rendering 8x16). Safe/recommended to leave enabled. */
-#define CONF_WITH_A2560X_SHADOW_FRAMEBUFFER 0
+#define CONF_WITH_A2560_SHADOW_FRAMEBUFFER 0
 # ifndef CONF_WITH_FORCE_8x8_FONT
-#  define CONF_WITH_FORCE_8x8_FONT 1
+#  define CONF_WITH_FORCE_8x8_FONT 0
 # endif
 # ifndef ALWAYS_SHOW_INITINFO
 #  define ALWAYS_SHOW_INITINFO 1 /* So we can get into EmuCON */
@@ -914,7 +912,7 @@
  */
 #ifdef MACHINE_A2560X
 # ifndef MACHINE_A2560_DEBUG
-#  define MACHINE_A2560_DEBUG 0
+#  define MACHINE_A2560_DEBUG 1
 # endif
 # ifndef FOENIX_CHANNEL_A_DEBUG_PRINT
 #  define FOENIX_CHANNEL_A_DEBUG_PRINT 0
@@ -957,12 +955,12 @@
 # ifndef CONF_WITH_CHUNKY8
 #  define CONF_WITH_CHUNKY8 1
 # endif
-/* At least one of CONF_WITH_A2560_TEXT_MODE and CONF_WITH_A2560X_SHADOW_FRAMEBUFFER must be enabled */
+/* At least one of CONF_WITH_A2560_TEXT_MODE and CONF_WITH_A2560_SHADOW_FRAMEBUFFER must be enabled */
 /* Use VICKY's text mode if possible rather than a bitmap screen buffer when using 8 pixel-high font.
  * No graphics possible. */
 #define CONF_WITH_A2560_TEXT_MODE 1
 /* Shadow framebuffer support (e.g. for rendering 8x16). Safe/recommended to leave enabled. */
-#define CONF_WITH_A2560X_SHADOW_FRAMEBUFFER 0
+#define CONF_WITH_A2560_SHADOW_FRAMEBUFFER 1
 # ifndef CONF_WITH_FORCE_8x8_FONT
 #  define CONF_WITH_FORCE_8x8_FONT 1
 # endif
@@ -979,7 +977,7 @@
 #endif
 #ifdef MACHINE_A2560_DEBUG
 # define CONF_WITH_EXTENDED_MOUSE 0 /* Not supported (yet?) */
-# define RS232_DEBUG_PRINT 0
+# define RS232_DEBUG_PRINT 1
 #endif
 #endif
 
@@ -1140,8 +1138,8 @@
 # ifndef CONF_WITH_A2560_TEXT_MODE
 #  define CONF_WITH_A2560_TEXT_MODE 0
 # endif
-# ifndef CONF_WITH_A2560U_SHADOW_FRAMEBUFFER
-#  define CONF_WITH_A2560U_SHADOW_FRAMEBUFFER 0
+# ifndef CONF_WITH_A2560_SHADOW_FRAMEBUFFER
+#  define CONF_WITH_A2560_SHADOW_FRAMEBUFFER 0
 # endif
 # ifndef CONF_WITH_VDI_16BIT
 #  define CONF_WITH_VDI_16BIT 0 /* Like ST, not Falcon */
@@ -2436,11 +2434,11 @@
 #endif
 
 /*
- * Set CONF_WITH_A2560U_SHADOW_FRAMEBUFFER to add support for a shadow framebuffer that
+ * Set CONF_WITH_A2560_SHADOW_FRAMEBUFFER to add support for a shadow framebuffer that
  * is in RAM but copied to VRAM during VBL.
  */
-#ifndef CONF_WITH_A2560U_SHADOW_FRAMEBUFFER
-# define CONF_WITH_A2560U_SHADOW_FRAMEBUFFER 0
+#ifndef CONF_WITH_A2560_SHADOW_FRAMEBUFFER
+# define CONF_WITH_A2560_SHADOW_FRAMEBUFFER 0
 #endif
 
 /*
@@ -2659,6 +2657,11 @@
 # if CONF_WITH_68040_PMMU
 #  error CONF_WITH_68040_PMMU requires MACHINE_ARANYM.
 # endif
+#endif
+
+/* Convenience */
+#if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
+#define MACHINE_FOENIX
 #endif
 
 #endif /* _CONFIG_H */

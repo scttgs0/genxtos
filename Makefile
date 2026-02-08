@@ -311,14 +311,15 @@ bios_src +=  memory.S processor.S vectors.S aciavecs.S aciavecs_c.c bios.c xbios
              disk.c dma.c dmasound.c floppy.c font.c ide.c ikbd.c initinfo.c iorec.c \
              keyboard.c keyboard_mouse_emulation.c kprint.c kprintasm.S machine.c \
              mfp.c mfp68901.c midi.c mouse.c natfeat.S natfeats.c nvram.c panicasm.S \
-             parport.c screen.c screen_atari.c screen_tt.c serport.c sound.c videl.c vt52.c xhdi.c \
+             parport.c screen.c screen_atari.c screen_tt.c  screen_vicky2.c screen_vicky3.c \
+             serport.c sound.c videl.c vt52.c xhdi.c \
              pmmu030.c 68040_pmmu.S \
              amiga.c amiga2.S spi_vamp.c \
              m68k_s.S startup_c.c \
              lisa.c lisa2.S \
              delay.c delayasm.S sd.c timer.c timer_.S memory2.c bootparams.c scsi.c nova.c \
              dsp.c dsp2.S scsidriv.c vbl.c \
-             a2560_bios.c a2560_bios_s.S a2560_conout_text.c a2560_conout_bmp.c spi_a2560m.c spi_gavin.c
+             a2560_bios.c a2560_bios_s.S a2560_conout_text.c a2560_conout_bmp.c  a2560_conout_bmp_1bpp.c  spi_a2560m.c spi_gavin.c
 
 
 ifeq (1,$(COLDFIRE))
@@ -903,7 +904,7 @@ A2560X_DEFS =
 NODEP += a2560x
 a2560x: UNIQUE = $(COUNTRY)
 a2560x: OPTFLAGS = $(SMALL_OPTFLAGS)
-a2560x: CPUFLAGS = -m68040
+a2560x: CPUFLAGS = -m68060
 a2560x: override DEF += -DTARGET_A2560X_ROM -DMACHINE_A2560X $(A2560X_DEFS)
 a2560x: foenix/libfoenix-a2560x.a
 	@echo "# Building A2560X Foenix EmuTOS into $(ROM_MACHINE_A2560X)"

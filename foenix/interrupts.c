@@ -69,19 +69,19 @@ static inline uint16_t *irq_pending_reg(uint16_t irq_id) { return &((uint16_t*)I
 /* Enable an interruption. First byte is group, second byte is bit */
 void a2560_irq_enable(uint16_t irq_id)
 {
-    a2560_debugnl("a2560_irq_enable(0x%02x)", irq_id);
+	//    a2560_debugnl("a2560_irq_enable(0x%02x)", irq_id);
     a2560_irq_acknowledge(irq_id);
     R16(irq_mask_reg(irq_id)) &= ~irq_mask(irq_id);
-    a2560_debugnl("a2560_irq_enable: Mask %p=%04x", irq_mask_reg(irq_id), R16(irq_mask_reg(irq_id)));
+    //a2560_debugnl("a2560_irq_enable: Mask %p=%04x", irq_mask_reg(irq_id), R16(irq_mask_reg(irq_id)));
 }
 
 
 /* Disable an interruption. First byte is group, second byte is bit */
 void a2560_irq_disable(uint16_t irq_id)
 {
-    a2560_debugnl("a2560_irq_disable(0x%02x)", irq_id);
+    //a2560_debugnl("a2560_irq_disable(0x%02x)", irq_id);
     R16(irq_mask_reg(irq_id)) |= irq_mask(irq_id);
-    a2560_debugnl("a2560_irq_disable: Mask %p=%04x", irq_mask_reg(irq_id), R16(irq_mask_reg(irq_id)));
+    //a2560_debugnl("a2560_irq_disable: Mask %p=%04x", irq_mask_reg(irq_id), R16(irq_mask_reg(irq_id)));
 }
 
 

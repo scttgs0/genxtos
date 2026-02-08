@@ -1,4 +1,4 @@
-/* SD Card control for the Gavin chip of the Foenix computer (used by A2560U) 
+/* SD Card control for the Gavin chip of the A2560 Foenix computers (except the A2560M)
  * Author: Vincent Barrilliot
  * Licence: MIT
  */
