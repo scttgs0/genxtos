@@ -18,6 +18,7 @@
 #include "emutos.h"
 #include "asm.h"
 #include "bios.h"
+#include "biosext.h" // video_ram_addr
 #include "biosmem.h"
 #include "has.h"
 #include "linea.h" // V_REZ_HZ / 
@@ -35,15 +36,38 @@
 #include "a2560_bios.h"
 
 
-#if CONF_WITH_VIDEL
 LONG video_ram_size;        /* these are used by Srealloc() */
 void *video_ram_addr;
-#endif
 
-/* This flavour allows the caller to specify the resolution */
+char rez_was_hacked;
+
+static void setup_video_ram(void);
+static ULONG calc_vram_size(void);
 static void screen_init_services(UWORD planes, UWORD xrez, UWORD yrez);
 
-static ULONG calc_vram_size(void);
+#if CONF_WITH_ATARI_VIDEO
+#define screen_driver screen_driver_atari
+#elif defined(MACHINE_AMIGA)
+#define screen_driver screen_driver_amiga
+#elif defined(MACHINE_LISA)
+#define screen_driver screen_driver_lisa
+#elif defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
+#define screen_driver a2560_screen_driver_vicky2
+#endif
+
+void screen_init(void) {
+    /* Initialize the video mode and palette. The video memory address will be done later. */
+    screen_driver->init();
+
+    rez_was_hacked = FALSE; /* initial assumption */
+
+    /* Setup the video RAM / allocate it if necessary */
+    KDEBUG(("setup_video_ram()\n"));
+    setup_video_ram();
+
+    /* Make the video hardware use that video REM */
+    screen_setphys(video_ram_addr);
+}
 
 /*
  * Check specified mode/rez to see if we should change; used in early
@@ -65,15 +89,7 @@ WORD check_moderez(WORD moderez)
     if (!screen_can_change_resolution())
         return 0;
 
-#ifdef MACHINE_AMIGA
-    return amiga_check_moderez(moderez);
-#endif
-
-#if CONF_WITH_ATARI_VIDEO
-    return atari_check_moderez(moderez);
-#else
-    return 0;
-#endif
+    return screen_driver->check_moderez(moderez);
 }
 
 /*
@@ -83,89 +99,35 @@ WORD check_moderez(WORD moderez)
 void initialise_palette_registers(WORD rez, WORD mode)
 {
 #if CONF_WITH_ATARI_VIDEO
-    UWORD mask;
-
-    if (HAS_VIDEL || HAS_TT_SHIFTER || HAS_STE_SHIFTER)
-        mask = 0x0fff;
-    else
-        mask = 0x0777;
-
-    initialise_ste_palette(mask);
-
-    if (FALSE) {
-        /* Dummy case for conditional compilation */
-    }
-#if CONF_WITH_VIDEL
-    else if (has_videl)
-        initialise_falcon_palette(mode);
-#endif
-#if CONF_WITH_TT_SHIFTER
-    else if (has_tt_shifter)
-        initialise_tt_palette(rez);
-#endif
-
-    fixup_ste_palette(rez);
+    initialise_palette_registers_atari(rez, mode);
 #endif /* CONF_WITH_ATARI_VIDEO */
 }
 
-static char rez_was_hacked;
 
-
-/* Initialize the video mode and palette. The video memory address will be done later. */
-void screen_init_mode(void)
-{
-#if CONF_WITH_ATARI_VIDEO
-    screen_atari_init_mode();
-#endif /* CONF_WITH_ATARI_VIDEO */
-
-#ifdef MACHINE_AMIGA
-    amiga_screen_init();
-#endif
-
-#ifdef MACHINE_LISA
-    lisa_screen_init();
-#endif
-
-#if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-    a2560_bios_screen_init();
-#endif
-
-    rez_was_hacked = FALSE; /* initial assumption */
-}
-
-
-/* Initialize the video address (mode is already set) */
-void screen_init_address(void)
+/* Initialize the video memory (allocate if necessary). Expects the video mode to be already set because calc_vram_size depends on it.
+ * Note that his is only called at startup. For subsequent resolution changes, the process is much more painful for the caller.
+ */
+static void setup_video_ram(void)
 {
     LONG vram_size;
-    UBYTE *screen_start;
+    UBYTE *vram_address;
     MAYBE_UNUSED(vram_size);
 
 #if CONF_VRAM_ADDRESS
-    vram_size = 0L;         /* unspecified */
-    screen_start = (UBYTE *)CONF_VRAM_ADDRESS;
+    vram_size = VIDEO_RAM_SIZE_UNSPECIFIED;
+    vram_address = (UBYTE *)CONF_VRAM_ADDRESS;
 #else
     vram_size = calc_vram_size();
-    /* videoram is placed just below the phystop */
-    screen_start = balloc_stram(vram_size, TRUE);
+    /* videoram is placed just below the top of the RAM (phystop) */
+    vram_address = balloc_stram(vram_size, TRUE);
 #endif /* CONF_VRAM_ADDRESS */
 
-#if CONF_WITH_VIDEL
     video_ram_size = vram_size;     /* these are used by Srealloc() */
-    video_ram_addr = screen_start;
-#endif
+    video_ram_addr = vram_address;
 
-    /* set new v_bas_ad */
-    v_bas_ad = screen_start;
-    KDEBUG(("v_bas_ad = %p, vram_size = %lu\n", v_bas_ad, vram_size));
-
-#if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-    /* We use a shadow framebuffer, and have code in place to copy it to the VRAM */
-    screen_setphys((const UBYTE *)VRAM_Bank0);
-#else
-    /* correct physical address */
-    screen_setphys(screen_start);
-#endif
+    /* set the v_bas_ad system variable */
+    v_bas_ad = video_ram_addr;
+    KDEBUG(("v_bas_ad = %p, vram_size = %lu\n", v_bas_ad, video_ram_addr));
 }
 
 /*
@@ -186,7 +148,7 @@ void screen_set_rez_hacked(void)
  *
  * returns 1 iff TRUE
  */
-int screen_can_change_resolution(void)
+WORD screen_can_change_resolution(void)
 {
     if (rez_was_hacked)
         return FALSE;
@@ -195,13 +157,8 @@ int screen_can_change_resolution(void)
     return TRUE;
 #endif
 
-#if CONF_WITH_VIDEL
-    if (has_videl)  /* can't change if real ST monochrome monitor */
-        return (VgetMonitor() != MON_MONO);
-#endif
-
 #if CONF_WITH_ATARI_VIDEO
-    return shifter_screen_can_change_resolution();
+    return screen_can_change_resolution_atari();
 #else
     return FALSE;
 #endif
@@ -351,15 +308,10 @@ const UBYTE *physbase(void)
 void screen_setphys(const UBYTE *addr)
 {
     KDEBUG(("screen_setphys(%p)\n", addr));
-
-#ifdef MACHINE_AMIGA
-    amiga_setphys(addr);
-#elif defined(MACHINE_LISA)
-    lisa_setphys(addr);
-#elif defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
+#if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
     a2560_setphys(addr);
-#elif CONF_WITH_ATARI_VIDEO
-    atari_setphys(addr);
+#elif
+    screen_driver->setphys(addr)
 #endif
 }
 
