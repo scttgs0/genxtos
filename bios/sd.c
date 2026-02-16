@@ -10,7 +10,7 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-#define ENABLE_KDEBUG
+/* #define ENABLE_KDEBUG */
 
 #include "emutos.h"
 #include "disk.h"
@@ -1005,8 +1005,10 @@ static const SPI_DRIVER *get_spi_driver_for_drive(UWORD drv)
         return EUNDEV;
 # endif
     return &spi_coldfire_driver;
-#elif defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
+#elif defined(MACHINE_A2560U)
     return &spi_gavin_driver;
+#elif defined(MACHINE_A2560K) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
+    return &spi_a2560m_sd0;
 #elif defined(MACHINE_A2560M)
     switch (drv) {
         // The onboard SD card is scanned first because we prefer booting from it as it

@@ -81,7 +81,7 @@
 
 /*==== Defines ============================================================*/
 
-#define DBGBIOS 1               /* If you want to enable debug wrappers */
+#define DBGBIOS 0              /* If you want to enable debug wrappers */
 #define ENABLE_RESET_RESIDENT 0 /* enable to run "reset-resident" code (see below) */
 
 #define ENV_SIZE    12          /* sufficient for standard PATH=^X:\^^ (^=nul byte) */

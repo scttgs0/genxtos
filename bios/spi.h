@@ -32,9 +32,9 @@ typedef struct {
 extern const SPI_DRIVER spi_vamp_driver;
 #elif defined(__mcoldfire__)
 extern const SPI_DRIVER spi_coldfire_driver;
-#elif defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
+#elif defined(MACHINE_A2560U)
 extern const SPI_DRIVER spi_gavin_driver;
-#elif defined(MACHINE_A2560M)
+#elif defined(MACHINE_A2560M) || defined(MACHINE_A2560K) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
 extern const SPI_DRIVER spi_a2560m_sd0;
 extern const SPI_DRIVER spi_a2560m_sd1;
 #endif
