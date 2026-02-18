@@ -1,10 +1,10 @@
-/* Support of GAVIN's handling of SD Card for the A2560U Foenix */
+/* Support of GAVIN's handling of SD Card for the A2560 Foenix */
 
 #include <stdint.h>
 #include "foenix.h"
 
 /* SD card support */
-struct __attribute__((__packed__)) gavin_sdc_controller_t
+struct gavin_sdc_controller_t
 {
     uint8_t version;
     uint8_t control;

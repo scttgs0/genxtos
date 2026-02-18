@@ -3,14 +3,18 @@
  * Licence: MIT
  */
 
-#include "../foenix/foenix.h"
+#define ENABLE_KDEBUG
+
+#include <stdint.h>
+#include "emutos.h"
 
 #if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
 
-#include <stdint.h>
+#include "../foenix/foenix.h"
 #include "spi.h"
 #include "../foenix/gavin_sdc.h"
 #include "../foenix/a2560.h"
+#include "../foenix/regutils.h"
 
 /* Nothing needed there, it's all handled by GAVIN */
 static void spi_clock_sd(void) { }
@@ -21,17 +25,25 @@ static void spi_cs_unassert(void) { }
 
 static void spi_initialise(void)
 {
+	if (R16(SDC_STATE) & SDC_STATE_ABSENT)
+		KDEBUG(("Carte absente!\n"));
+	else
+		KDEBUG(("Carte présente.\n"));
+	
+	gavin_sdc_controller->control = 1; // Reset
+	gavin_sdc_controller->control = 0; // Reset
+	
     /* We use plain SPI and EmuTOS's SD layer on top of it */
     gavin_sdc_controller->transfer_type = SDC_TRANS_DIRECT;
 }
 
-
-static uint8_t clock_byte(uint8_t value)
+uint8_t clock_byte(uint8_t value);
+uint8_t clock_byte(uint8_t value)
 {
     gavin_sdc_controller->data = value;
     gavin_sdc_controller->transfer_control = SDC_TRANS_START;
     while (gavin_sdc_controller->transfer_status & SDC_TRANS_BUSY)
-        ;
+		;
     return gavin_sdc_controller->data;
 }
 

@@ -1,6 +1,6 @@
 /* Controller of the A2560M's SD Card */
 
-#if defined(MACHINE_A2560M)
+#if defined(MACHINE_A2560M) || defined(MACHINE_A2560X)
 
 #include <stdint.h>
 #include "asm.h" /* just_rts */
@@ -149,6 +149,7 @@ const SPI_DRIVER spi_a2560m_sd0 = {
     just_rts
 };
 
+#if defined(MACHINE_A2560M)
 /* SD Card slot 1 (on main board)*/
 const SD sd1 = {
     (volatile int8_t * const)SDC1_BASE,
@@ -174,5 +175,6 @@ const SPI_DRIVER spi_a2560m_sd1 = {
     just_rts,
     just_rts
 };
+#endif // defined(MACHINE_A2560M)
 
 #endif

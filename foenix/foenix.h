@@ -120,14 +120,20 @@
 /* IDE and SDCard */
 #if defined(MACHINE_A2560K) || defined(MACHINE_A2560X) || defined(MACHINE_GENX) || defined(MACHINE_A2560U)
 #define IDE_BASE       (GAVIN+0x400)
-#define SDC_BASE       (GAVIN+0x300)
+#define SDC_BASE       (GAVIN+0x300)	
 #elif defined(MACHINE_A2560M)
 #define SDC_BASE       (GAVIN+0x300) /* SD Card 0 (front panel) */
 #define SDC1_BASE      (GAVIN+0x380) /* SD Card 1 (main board) */
-/*#define SDC_BASE       (GAVIN+0x300)*/
-/*GAVIN 518 en R32*/
 #endif
 
+/* SD card present / write-protected */
+#if defined(MACHINE_A2560X) || defined(MACHINE_GENX)
+#define SDC_STATE      (GAVIN+0x51a) /* Read 16 bits */
+#elif defined(MACHINE_A2560K) || defined(MACHINE_A2560M)
+#define SDC_STATE      (GAVIN+0x518) /* Read as 32bits on the M (don't know on the K) */
+#endif
+#define SDC_STATE_ABSENT 0x0200
+#define SDC_STATE_WRITE_PROTECTED 0x0100  
 
 
 #define GAVIN_CTRL              (GAVIN)
