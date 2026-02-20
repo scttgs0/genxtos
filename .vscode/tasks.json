@@ -16,7 +16,7 @@
         {
             "label": "Upload MCP",
             "type": "shell",
-            "command": "python3 $FOENIXMGR/FoenixMgr/fnxmgr.py --upload-srec /home/vincent/GenX/FoenixMCP/src/foenixmcp.s68",,
+            "command": "python3 $FOENIXMGR/FoenixMgr/fnxmgr.py --upload-srec /home/vincent/GenX/FoenixMCP/src/foenixmcp.s68",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
