@@ -71,10 +71,12 @@ int32_t trap_dispatch(uint16_t *args_on_stack)
 	case FNX_WM8776_GET_DIGITAL_VOLUME: return wm8776_get_digital_volume();
 
 	/* PS/2 keyboard and mouse */
+#ifndef MACHINE_A2560K
 	case FNX_KBD_INIT:  { struct p_t { const uint32_t *a; uint16_t b; } *p = (struct p_t*)args; a2560_kbd_init(p->a, p->b); break; }
 	case FNX_PS2_SET_KEY_UP_HANDLER: return (int32_t)a2560_ps2_set_key_up_handler(*((scancode_handler_t*)args));
 	case FNX_PS2_SET_KEY_DOWN_HANDLER: return (int32_t)a2560_ps2_set_key_down_handler(*((scancode_handler_t*)args));
-	case FNX_PS2_SET_MOUSE_HANDLER: return (int32_t)a2560_ps2_set_mouse_handler(*((mouse_packet_handler_t*)args));
+#endif
+    case FNX_PS2_SET_MOUSE_HANDLER: return (int32_t)a2560_ps2_set_mouse_handler(*((mouse_packet_handler_t*)args));
 
 	/* Real time Clock */
 	case FNX_RTC_INIT: bq4802ly_init(); break;

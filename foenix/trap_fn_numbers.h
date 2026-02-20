@@ -50,11 +50,13 @@
 #define FNX_WM8776_GET_DIGITAL_VOLUME   (FNX_WM8776_BASE+4)
 
 /* Keyboard */
-#define FNX_KBD_BASE                    150
-#define FNX_KBD_INIT                    (FNX_KBD_BASE+0)
-#define FNX_PS2_SET_KEY_UP_HANDLER      (FNX_KBD_BASE+1)
-#define FNX_PS2_SET_KEY_DOWN_HANDLER    (FNX_KBD_BASE+2)
-#define FNX_PS2_SET_MOUSE_HANDLER       (FNX_KBD_BASE+3)
+#define FNX_PS2_BASE                    150
+#ifndef MACHINE_A2560K
+#define FNX_KBD_INIT                    (FNX_PS2_BASE+0)
+#define FNX_PS2_SET_KEY_UP_HANDLER      (FNX_PS2_BASE+1)
+#define FNX_PS2_SET_KEY_DOWN_HANDLER    (FNX_PS2_BASE+2)
+#endif
+#define FNX_PS2_SET_MOUSE_HANDLER       (FNX_PS2_BASE+3)
 
 /* Real Time Clock */
 #define FNX_RTC_BASE                170

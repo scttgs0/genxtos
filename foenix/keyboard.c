@@ -11,7 +11,9 @@
 #include "ps2_mouse_a2560.h"
 
 /* The IRQ handlers */
+#ifndef MACHINE_A2560K
 void a2560_irq_ps2kbd(void);
+#endif
 void a2560_irq_ps2mouse(void);
 
 static void do_nothing(uint8_t dummy) {
@@ -20,7 +22,9 @@ static void do_nothing(uint8_t dummy) {
 
 /* List here all drivers we support */
 static const struct ps2_driver_t * const drivers[] = {
+#ifndef MACHINE_A2560K
     &ps2_keyboard_driver,
+#endif
     &ps2_mouse_driver_a2560u
 };
 
@@ -31,8 +35,6 @@ static const struct ps2_driver_t * const drivers[] = {
 void a2560_kbd_init(const uint32_t *counter, uint16_t counter_freq)
 {
     /* Setup the PS/2 stuff */
-    /* TODO: on the A2560K, setup MAURICE too/instead ? */
-
     a2560_debugnl("a2560_kbd_init");
 
     /* Disable IRQ while we're configuring */
@@ -48,7 +50,9 @@ void a2560_kbd_init(const uint32_t *counter, uint16_t counter_freq)
     ps2_config.n_drivers    = sizeof(drivers)/sizeof(struct ps2_driver_t*);
     ps2_config.drivers      = drivers;
 
+#ifndef MACHINE_A2560K
     ps2_config.callbacks.on_key_up = ps2_config.callbacks.on_key_down = (scancode_handler_t)do_nothing;
+#endif
     ps2_config.callbacks.on_mouse = (mouse_packet_handler_t)do_nothing;
 
 #if 0
@@ -60,20 +64,27 @@ void a2560_kbd_init(const uint32_t *counter, uint16_t counter_freq)
     ps2_init();
 
     /* Register GAVIN interrupt handlers */
+#ifndef MACHINE_A2560K
     cpu_set_vector(INT_PS2KBD_VECN, (uint32_t)a2560_irq_ps2kbd);
+#endif
     cpu_set_vector(INT_PS2MOUSE_VECN, (uint32_t)a2560_irq_ps2mouse);
 
     /* Acknowledge any pending interrupt */
+#ifndef MACHINE_A2560K
     a2560_irq_acknowledge(INT_KBD_PS2);
+#endif
     a2560_irq_acknowledge(INT_MOUSE);
 
     /* Go ! */
     a2560_debugnl("Enabling GAVIN PS2/mouse irqs");
+#ifndef MACHINE_A2560K
     a2560_irq_enable(INT_KBD_PS2);
+#endif
     a2560_irq_enable(INT_MOUSE);
 }
 
 
+#ifndef MACHINE_A2560K
 scancode_handler_t a2560_ps2_set_key_up_handler(void (*handler)(uint8_t scancode)) {
     scancode_handler_t previous = ps2_config.callbacks.on_key_up;
     ps2_config.callbacks.on_key_up = handler;
@@ -86,6 +97,7 @@ scancode_handler_t a2560_ps2_set_key_down_handler(void (*handler)(uint8_t scanco
     ps2_config.callbacks.on_key_down = handler;
     return previous;
 }
+#endif
 
 
 mouse_packet_handler_t a2560_ps2_set_mouse_handler(void (*handler)(int8_t *packet)) {

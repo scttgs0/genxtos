@@ -118,8 +118,6 @@ void a2560_bios_vgetrgb(int16_t index,int16_t count,uint32_t *rgb) {
 }
 
 
-
-
 /* Serial port ***************************************************************/
 
 uint32_t a2560_bios_bcostat1(void)
@@ -130,7 +128,7 @@ uint32_t a2560_bios_bcostat1(void)
 void a2560_bios_bconout1(uint8_t byte)
 {
     uart16550_put((UART16550*)UART1,&byte, 1);
-	uart16550_put((UART16550*)UART2,&byte, 1);
+    uart16550_put((UART16550*)UART2,&byte, 1);
 }
 
 void a2560_irq_com1(void); // Event handler in a2560_s.S
@@ -254,10 +252,12 @@ void a2560_bios_kbd_init(void)
 {
     /* We're using the VBL counter: that may depend on the resolution, if it changes,
      * and of the VBLs are blocked, the counter will not work. But after init, when everything
-     * is setup and we're only reacting to interupts, it shouldn't matter. */
+     * is setup and we're only reacting to interrupts, it shouldn't matter. */
+#ifndef MACHINE_A2560K
     fnx_kbd_init((uint32_t*)&frclock, 60);
     fnx_ps2_set_key_up_handler(kbd_int);
     fnx_ps2_set_key_down_handler(kbd_int);
+#endif
     fnx_ps2_set_mouse_handler(call_mousevec);
 }
 

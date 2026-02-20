@@ -211,6 +211,7 @@ SYM(fnx_wm8776_get_digital_volume):
     rts
 
 /* Keyboard and mouse ********************************************************/
+#ifndef MACHINE_A2560K
     .GLOBAL SYM(fnx_kbd_init)
 SYM(fnx_kbd_init):
     lea     4(sp),a0
@@ -236,6 +237,7 @@ SYM(fnx_ps2_set_key_down_handler):
     trap    #TRAP_NUMBER
     addq.l  #6,sp
     rts
+#endif
 
     .GLOBAL SYM(fnx_ps2_set_mouse_handler)
 SYM(fnx_ps2_set_mouse_handler):

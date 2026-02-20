@@ -46,8 +46,10 @@ void ARGS_ON_STACK fnx_sn76489_noise_source(uint8_t type, uint8_t source);
 /* Keyboard */
 void ARGS_ON_STACK fnx_kbd_init(const uint32_t *counter, uint16_t counter_freq);
 /* PS/2 stuff. Note: we don't assume the keyboard is PS/2 because e.g the K has a keyboard with a controller (Maurice) which is not PS/2*/
+#ifndef MACHINE_A2560K
 scancode_handler_t ARGS_ON_STACK fnx_ps2_set_key_up_handler(scancode_handler_t);
 scancode_handler_t ARGS_ON_STACK fnx_ps2_set_key_down_handler(scancode_handler_t);
+#endif
 mouse_packet_handler_t ARGS_ON_STACK fnx_ps2_set_mouse_handler(mouse_packet_handler_t);
 
 /* Real Time Clock */

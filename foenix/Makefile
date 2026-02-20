@@ -27,7 +27,8 @@ SRC_C=a2560.c a2560_debug.c bq4802ly.c cpu.c interrupts.c mpu401.c \
 	shadow_fb.c \
 	trap.c trap_dispatch.c \
 	vicky2_txt_a_logger.c \
-	ym2151.c ym262.c
+	ym2151.c ym262.c \
+	kbd_mo.c ring_buffer.c
 SRC_S=a2560_s.S shadow_fb_s.S timer_s.S trap_bindings.S trap_handler.S
 SRC=$(SRC_C) $(SRC_S)
 OBJ_C=$(SRC_C:.c=.o)

@@ -72,6 +72,7 @@
 #include "../foenix/trap.h"
 #include "../foenix/trap_bindings.h"
 #include "../foenix/cpu.h"
+#include "../foenix/kbd_mo.h"
 
 #if WITH_CLI
 #include "../cli/clistub.h"
@@ -245,12 +246,12 @@ static void bios_init(void)
     KDEBUG(("amiga_uae_init()\n"));
     amiga_uae_init();
 #endif
-	
+
     /* Initialize the processor */
     KDEBUG(("processor_init()\n"));
     processor_init();   /* Set CPU type, longframe and FPU type */
 	/* Initialise the trap interface of the Foenix library */
-	
+
 #if CONF_WITH_ADVANCED_CPU
     is_bus32 = (UBYTE)detect_32bit_address_bus();
 #endif
@@ -259,7 +260,7 @@ static void bios_init(void)
     /* Setup all CPU exception vectors */
     KDEBUG(("vecs_init()\n"));
     vecs_init();
-	
+
     /* Set 'reasonable' default values for delay */
     KDEBUG(("delay_init()\n"));
     delay_init();
@@ -268,7 +269,6 @@ static void bios_init(void)
     KDEBUG(("machine_detect()\n"));
     machine_detect();
 
-	
     /* Initialise machine-specific stuff */
     KDEBUG(("machine_init()\n"));
     machine_init();
@@ -443,6 +443,7 @@ static void bios_init(void)
     KDEBUG(("dmasound_init()\n"));
     dmasound_init();
 #endif
+
     KDEBUG(("snd_init()\n"));
     snd_init();         /* Reset Soundchip, deselect floppies */
 
@@ -452,8 +453,15 @@ static void bios_init(void)
      */
     KDEBUG(("kbd_init()\n"));
     kbd_init();         /* init keyboard, disable mouse and joystick */
+
+#ifdef MACHINE_A2560K
+    KDEBUG("kbdmo_init()\n");
+    kbdmo_init();
+#else    /* midi not working of A2560K, skip */
     KDEBUG(("midi_init()\n"));
     midi_init();        /* init MIDI acia so that kbd acia irq works */
+#endif
+
     KDEBUG(("init_acia_vecs()\n"));
     init_acia_vecs();   /* Init the ACIA interrupt vector and related stuff */
     KDEBUG(("after init_acia_vecs()\n"));
@@ -473,15 +481,15 @@ static void bios_init(void)
     // To test if the delay is correct, send some indication every second
     for(;;) {
         int i;
-		unsigned long *beeper =(unsigned long*) 0xfec00000L;
-            delay_loop(loopcount_1_msec*1000);
-		
-		if (*beeper & 16)
-			*beeper = (*beeper & ~16);
-		else
-			*beeper |= 16;
-				*((volatile unsigned char * const)0xfec80008) += 0x11;
-		//        *((volatile unsigned char * const)0xfec00b01) = '.';
+        unsigned long *beeper =(unsigned long*) 0xfec00000L;
+        delay_loop(loopcount_1_msec*1000);
+
+        if (*beeper & 16)
+            *beeper = (*beeper & ~16);
+        else
+            *beeper |= 16;
+        *((volatile unsigned char * const)0xfec80008) += 0x11;
+//        *((volatile unsigned char * const)0xfec00b01) = '.';
     }
 #endif
 
@@ -616,7 +624,7 @@ static void bios_init(void)
         fnx_sn76489_mute_all();
         fnx_sn76489_freq(0,440);
         fnx_sn76489_attenuation(0,0);
-
+        fnx_sn76489_mute_all();
     }
 
 #endif
@@ -882,12 +890,12 @@ void biosmain(void)
     blkdev_boot();
 
     Dsetdrv(bootdev);           /* Set boot drive */
+
     init_default_environment(); /* Build default environment string */
 
 #if ENABLE_RESET_RESIDENT
     run_reset_resident();       /* see comments above */
 #endif
-
 
 
 #if WITH_CLI
@@ -903,6 +911,7 @@ void biosmain(void)
 #endif
 
     autoexec();                 /* autoexec PRGs from AUTO folder */
+
     char *the_env = *((char**)0x4be);
     /* clear commandline */
 
@@ -1142,7 +1151,7 @@ LONG setexc(WORD num, LONG vector)
     LONG *addr = (LONG *) (4L * num);
     oldvector = *addr;
 
-    if(vector != -1) {
+    if (vector != -1) {
         *addr = vector;
     }
     return oldvector;
@@ -1237,7 +1246,6 @@ static LONG bios_8(WORD handle)
     return bcostat(handle);
 }
 #endif
-
 
 
 /**
