@@ -352,7 +352,7 @@ static BOOL process_inf2(BOOL *isauto)
     if (aes_configuration.flags & AES_CFG_PROVIDES_DCLICK_SPEED)
         ev_dclick(aes_configuration.double_click_rate, TRUE);
 
-#if MPS_BLITTER_ALWAYS_ON
+#ifdef MPS_BLITTER_ALWAYS_ON
     Blitmode(1);
 #else
   #if CONF_WITH_BLITTER
