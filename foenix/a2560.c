@@ -94,7 +94,7 @@ void a2560_init(bool cold_boot)
 
     a2560_debugnl("a2560_irq_init()");
     a2560_irq_init();
-	
+
     a2560_debugnl("a2560_timer_init");
     a2560_timer_init();
 
@@ -270,7 +270,7 @@ void a2560_system_info(struct foenix_system_info_t *result)
 
     /* From GAVIN */
     uint16_t machine_id = GAVIN_R(GAVIN+0x0C);
-    
+
     a2560_debugnl("Machine id: %x", machine_id);
     result->cpu_id = (machine_id >> 12) & 7;
     if (result->cpu_id >= FOENIX_CPU_NAME_SIZE)
@@ -279,7 +279,7 @@ void a2560_system_info(struct foenix_system_info_t *result)
         result->cpu_name = (char*)foenix_cpu_name[result->cpu_id];
 
     result->cpu_speed_hz = foenix_cpu_speed_hz[(machine_id >> 5) & 7];
-    
+
     int model_id = machine_id & 0x0f;
     if (model_id >= FOENIX_MODEL_NAME_SIZE)
         result->model_name = "Unknown";

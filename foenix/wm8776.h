@@ -16,10 +16,10 @@
 /* Summary (for complete list of feature, see the ):
  * The WM8776 of Wolfson microelectronics can mix 5 stereo analog inputs (you can enable which).
  * The signals are summed and sent an analog attenuator, with has a PGA with different modes to adjust the level,
- * then ADC, is processed then sent to a DAC. 
+ * then ADC, is processed then sent to a DAC.
  * Along the signal path there is a with noise gate, limiter, and auto-level features (a bit like a compressor).
  * Digital signal processing includes high-pass filter, de-emphasis.
- * 
+ *
  * Then the mixing is done (and auxiliary input can be mixed in, and the inputs can be directly mixed by bypassing
  * the digital signal path) and the data is output to headphones and line output, each of them having their own
  * volume control.
@@ -124,11 +124,11 @@
 #define    DACFMT_I2S             (2<<0)
 #define    DACFMT_DSP             (3<<0)
 #define   DACLRP_MASK 4 /* Left/right polarity */
-/* In left/right/i2s modes */ 
+/* In left/right/i2s modes */
 #define    DACLRP_NORMAL          (0<<2)
 #define    DACLRP_INVERTED        (1<<2)
-/* In DSP mode */ 
-#define    DACLRP_DSP_EARLY       (0<<2)          
+/* In DSP mode */
+#define    DACLRP_DSP_EARLY       (0<<2)
 #define    DACLRP_DSP_LATE        (1<<2)
 #define   DACBCP_MASK 8 /* BCLK polarity (DSP modes) */
 #define    DACBCP_NORMAL          (0<<3)
@@ -146,10 +146,10 @@
 #define    ADCFMT_I2S             (2<<0)
 #define    ADCFMT_DSP             (3<<0)
 #define   ADCLRP_MASK 4 /* Left/right polarity */
-/* In left/right/i2s modes */ 
+/* In left/right/i2s modes */
 #define    ADCLRP_NORMAL          (0<<2)
 #define    ADCLRP_INVERTED        (1<<2)
-/* In DSP mode */ 
+/* In DSP mode */
 #define    ADCLRP_DSP_EARLY       (0<<2)
 #define    ADCLRP_DSP_LATE        (1<<2)
 #define   ADCBCP_MASK 8 /* BCLK polarity (DSP modes) */
@@ -165,7 +165,7 @@
 #define    ADCMCLK_NORMAL         (0<<6)
 #define    ADCMCLK_INVERTED       (1<<6)
 /* ADC high pass filter */
-#define   ADCHPD_MASK             (1<<8) 
+#define   ADCHPD_MASK             (1<<8)
 #define    ADCHPD_ENABLED         (0<<8)
 #define    ADCHPD_DISABLED        (1<<8)
 
@@ -248,7 +248,7 @@
 #define WM8776_R18_ADC_AUTOLEVEL_ATTACK_DECAY (0x12<<9)
 #define   ATK_MASK                (15<<0) /* Attack time. Default is 2 (33.6ms in ALC, 1ms in Limiter) */
 #define   DCY_MASK                (15<<4) /* Decay time. Default is 3, (269ms in ALC, 9.6ms in limiter) */
- 
+
  /* Noise gate */
 #define WM8776_R19_NOISE_GATE (0x13<<9)
 #define   NGAT_MASK               (1<<0) /* Noise gate */
@@ -258,7 +258,7 @@
 
  /* ADC Limiter transient window length */
 #define WM8776_R20_ADC_LIMITER_TRANSIENT_WINDOW (0x14<<9)
-#define   MAXATTEN_MASK           (15<<0) /* Max ALC PGA attenuation. */ 
+#define   MAXATTEN_MASK           (15<<0) /* Max ALC PGA attenuation. */
 #define   TRANWIN_MASK            (7<<4)  /* Length of transcient window. Default is 2, 125us */
 
 /* ADC input mixer and powerdown channel mute */

@@ -104,10 +104,10 @@
 /* Waveform selection (9 channels) e0-e8 */
 #define YM262_WAVE_SEL        (YM262_L+0xe0)
 #define  YM262_WAVE_MASK       (7<<0)
-/* Bit 5 of register 01 (YM262_WS_ENABLE_MASK) must be set to use waveforms other than sine. 
+/* Bit 5 of register 01 (YM262_WS_ENABLE_MASK) must be set to use waveforms other than sine.
  * Waveforms 4-7 are available only on OPL3 (see YM262_REG_OPL3_EN)
  * 0: sine, 1, half-sine (+only), 2:abs-sine, 3:pi/4-sine
- * 4: pi/2-sine, 5 abs(pi/2_sine), 6:square, 7:derived square */ 
+ * 4: pi/2-sine, 5 abs(pi/2_sine), 6:square, 7:derived square */
 
 /* Public fonction prototypes */
 void ym262_write_reg(unsigned long adr, uint8_t value); /* The address is a real address, not some kind of offset */

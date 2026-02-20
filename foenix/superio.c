@@ -80,10 +80,10 @@ void superio_init(void) {
 static void UnReset_LPC(void) {
   unsigned long i;
   /* TODO: use timers clocked at CPU speed to do the waits */
-  
+
   R32(GAVIN_CTRL) |= GAVIN_CTRL_LPC_RESET; /* We start in normal mode */
   for (i = 0; i< 1000; i++) /* Not sure if this is necessary */
-	  DONT_OPTIMIZE_OUT; 
+	  DONT_OPTIMIZE_OUT;
 
   R32(GAVIN_CTRL) &= ~GAVIN_CTRL_LPC_RESET; /* Enter reset mode */
   for (i = 0; i< 400000; i++) /* Wait at least 0x325aa0 cycles at 33MHz */

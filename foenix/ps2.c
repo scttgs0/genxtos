@@ -1,5 +1,5 @@
 /* PS/2 controller driver
- * 
+ *
  * Done as per https://wiki.osdev.org/%228042%22_PS/2_Controller
  * Authors:
  *	Vincent Barrilliot
@@ -168,7 +168,7 @@ uint16_t ps2_init(void)
 		a2560_debugnl("ps2.init: Port 2 disabled");
 	else
 		a2560_debugnl("ps2.init: Failed to disable port 2");
-	
+
 	/* Flush input data */
 	while (get_data())
 		;
@@ -404,7 +404,7 @@ static bool send_command(uint8_t cmd)
 
 
 static bool get_data(void)
-{	
+{
 	if (wait_until_can_read())
 	{
 		L.in_data = get_data_no_wait();
@@ -438,7 +438,7 @@ static bool send_data(enum ps2_target dev, uint8_t data)
 			return send_data2(data);
 		default:
 			return false;
-	}	
+	}
 }
 
 

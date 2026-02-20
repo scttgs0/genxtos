@@ -1,6 +1,6 @@
 /*
  * Scancode set 1 to arbitrary internal key numbers.
- * Actually these key numbers are not totally arbitrary, they are 
+ * Actually these key numbers are not totally arbitrary, they are
  * borrowed from Linux's include/uapi/linux/input-event-codes.h
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -8,8 +8,8 @@
  * the Free Software Foundation.
  */
 
- #ifndef _PS2_SCANCODES_H_
- #define _PS2_SCANCODES_H_
+#ifndef _PS2_SCANCODES_H_
+#define _PS2_SCANCODES_H_
 
 #define KEY_RESERVED	0
 #define KEY_ESC			1

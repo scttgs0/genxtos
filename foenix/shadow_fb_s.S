@@ -39,7 +39,7 @@ _a2560_sfb_copy_fb_to_vram: // Copies our SRAM buffer to video ram
     lea     _a2560_sfb_dirty_cells,a0
     tst.w   4(a0)           // Test "full_copy" to know if we should copy the whole frame buffer to VRAM ?
     jne     copy_whole_screen  // Yes -> go there
-    // Otherwise process the list of dirty cells from the ring buffer  
+    // Otherwise process the list of dirty cells from the ring buffer
     move.w  2(a0),d0        // Get reader
     cmp.w   (a0),d0         // Compare with writer
     jeq     cell_copy_done  // Nothing to read -> end

@@ -10,9 +10,9 @@
 // returns the number of tight loops done during the calibration time, or -1 if CPU went too fast
 _a2560_run_calibration: // Calibration loop
     move.l d2,-(sp)
-    clr.l  d0  // Tight loop iterations (de)counter (so to match delay_loop() 
-    clr.w  d2  // 
-    
+    clr.l  d0  // Tight loop iterations (de)counter (so to match delay_loop()
+    clr.w  d2  //
+
 cal_loop: // Kind of replicate asm.h's delay_loop() function (though it uses jpl rather than jne)
     // We're using jne so we can use the full 32bit range rather than 31bis. Less chances of this
     // breaking if the CPU is too fast.
@@ -21,7 +21,7 @@ cal_loop: // Kind of replicate asm.h's delay_loop() function (though it uses jpl
 
     // If we're here, either the timer interrupted us, or the CPU was too fast and decounted
     // faster than the calibration time.
-    
+
     tst.w   d2 // who interrupted the loop ?
     beq.s   cpu_too_fast
 

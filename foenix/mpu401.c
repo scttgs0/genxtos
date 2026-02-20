@@ -1,5 +1,5 @@
 /* MPU-401 MIDI device
- * 
+ *
  * Authors:
  *	Vincent Barrilliot
  *  Peter J Weingartner

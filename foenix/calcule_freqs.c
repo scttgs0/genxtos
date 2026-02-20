@@ -12,12 +12,12 @@ int main(void) {
         printf("%ld, ", (uint32_t) ceil((pow(2.,(i-69.)/12.)*1000)));
     }
     puts("};");
-    
+
     puts("Min/max frequencies per block:\n");
     int fs = 49716;
     for (int block=0; block<8; block++)
     {
-        double factor = pow(2,19)/fs/pow(2,(block-1)); 
+        double factor = pow(2,19)/fs/pow(2,(block-1));
         double fmin = 1./factor;
         double fmax = 1023./factor;
         printf("\t{%ld, %ld},\n", (uint32_t)(fmin*10000.), (uint32_t)(fmax*10000.));

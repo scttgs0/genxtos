@@ -62,13 +62,13 @@ void wm8776_deinit(void)
 
 void wm8776_send(uint16_t data)
 {
-    wm8776_regs[WM8776_REGNR(data)] = WM8776_VALUE(data); 
-    
+    wm8776_regs[WM8776_REGNR(data)] = WM8776_VALUE(data);
+
     /* Gavin/Beatrix take care of the communication with the WM8776 (how nice).
      * We only need to write the 16 bits (14 of them are really relevant).
-     * MSB of the port tells us weither the line is busy, if so we have to wait.
+     * MSB of the port tells us whether the line is busy, if so we have to wait.
      *
-     * Possible enhancement: queue messages and use interrupts. */ 
+     * Possible enhancement: queue messages and use interrupts. */
     while (*wm8776 & 0x8000)
         ;
     *wm8776 = data;

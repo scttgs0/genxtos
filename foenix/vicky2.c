@@ -341,7 +341,7 @@ a2560_debugnl("vicky2_init:done enabling video mode");
         for (i = 0; i < 256; i++)
             vicky2_set_lut_color(vicky, 0, i, convert_atari2vicky_color(vicky2_default_palette[i]));
         a2560_debugnl("vicky2_init: lut initialized");
-        
+
         /* Clear the screen */
         fb_size = (uint32_t)mode.w * mode.h / sizeof(uint16_t);
         fb_size -= 1;
@@ -428,7 +428,7 @@ void vicky2_set_video_mode(const struct vicky2_channel_t * const vicky, uint16_t
     vicky_vbl_freq = vicky->video_modes[mode & 0x7].fps;
 #else
     /* In theory we should disable interrupts so nobody changes the
-     * VICKY control register while we're messing with it... */    
+     * VICKY control register while we're messing with it... */
     vicky->ctrl->control = (vicky->ctrl->control & ~VICKY_MODE_MASK) | ((mode & 0x07) << 8);
     vicky_vbl_freq = vicky->video_modes[mode & 0x03].fps;
 #endif
@@ -486,7 +486,7 @@ void vicky2_set_text_lut(const struct vicky2_channel_t * const vicky, const uint
     {
         fglut[i] = fg[i];
         bglut[i] = bg[i];
-    }    
+    }
 #elif defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
     #define TLUTREGSIZE uint32_t
     volatile uint32_t * const fglut = (uint32_t*)vicky->text_memory->palette_fg;

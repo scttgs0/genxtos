@@ -84,7 +84,7 @@ void channel_A_logger_init(void)
             }
             channel_A_write(buffer);
         }
-    
+
     *((uint32_t*)0xfec40008) = 0x00FFFFFF; /* White border indicates we got here */
 }
 
@@ -180,7 +180,7 @@ static void scroll()
     /* This doesn't work because it uses 16/32 byte writes */
     memcpy(&TEXT_MEMORY[COL_COUNT], &TEXT_MEMORY[0], COL_COUNT*LINE_COUNT-1);
     memset(&TEXT_MEMORY[COL_COUNT*LINE_COUNT-1], COL_COUNT, 0); /* VBCC doesn't know bzero */
-#endif    
+#endif
     /* If we used background colours we would have to scroll them as well, but we don't. */
 }
 

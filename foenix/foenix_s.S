@@ -12,7 +12,7 @@
 _vicky_chan_a_logger_init:
     move.l #bus_error,0x8
     move.l #address_error,0xc
-    
+
  move.w #0x2700,sr
         lea 0xfec40000,a0        // Vicky channel a
         move.l #0x00080801,4(a0) // Border enabled, 8 pixels
@@ -83,7 +83,7 @@ _kprintf_outc_foenix_channel_a: // Log le charactère sur la pile
         move.w d2,d1 // d1: x
         swap   d2    // d2: y
         cmpi.b #'\n',d0
-        bne.s .notlf 
+        bne.s .notlf
         addq.w #1,d2 // y++ TODO: scroll si nécessaire
         clr.w  d1 // x=0, traite \n comme \r\n
         bra.s .updcur

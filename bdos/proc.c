@@ -548,7 +548,7 @@ static void proc_go(PD *p)
     KDEBUG(("basepage: %p\n", (void*)sp->basepage));
 
     sp->retaddr = (long)p->p_tbase; /* return address a3 is text start */
-    sp->sr = get_sr() & 0x0700;  /* the process will start in user mode, same IPL */    
+    sp->sr = get_sr() & 0x0700;  /* the process will start in user mode, same IPL */
     KDEBUG(("retaddr: %p, sr=%04x\n", (void*)sp->retaddr, sp->sr));
 
     /* the other stack is the supervisor stack */

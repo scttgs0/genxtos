@@ -119,7 +119,7 @@ struct ym2151_voice_t voice_per_channel[8];
 
 void ym2151_key_on(uint16_t channel) {
   uint8_t value;
-  
+
   /* Safe check */
   channel &= 7;
   value = (0x80 | voice_per_channel[channel].op_mask | channel);
@@ -183,7 +183,7 @@ void ym2151_noise(uint8_t enable, uint8_t frequency) {
   uint8_t value = frequency & 31;
   if (enable)
     value |= 0x80;
-  ym2151_write(NE_NFRQ, value); 
+  ym2151_write(NE_NFRQ, value);
 }
 
 void ym2151_lfo_freq(uint8_t frequency) {

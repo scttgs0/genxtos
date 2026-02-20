@@ -20,7 +20,7 @@
 
 #include "a2560_struct.h"
 
-struct __attribute__((aligned(16))) bq4802ly_t 
+struct __attribute__((aligned(16))) bq4802ly_t
 {
     volatile uint8_t seconds;
     uint8_t dummy1;

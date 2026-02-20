@@ -5,10 +5,10 @@
  */
 
 #include "config.h"
-	
+
 	.GLOBL	_trap_irq_handler
 	.EXTERN	_cpu_has_long_frames
-	
+
 _trap_irq_handler:
 	movem.l	d1/a0-a1,-(sp) /* Save registers */
 	btst	#5,0xc(sp) /* Are we called from supervisor mode ? 0xc because skip 12 bytes from 3 saved registers, and examinig MSB of sr */

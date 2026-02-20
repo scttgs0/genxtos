@@ -62,21 +62,21 @@ void vicky_mouse_ps2(int8_t byte)
         return; /* We're lost. Ignore the packet. This is not even safe because if the packet contains a 08 we're fooled. */
 
     // The VICKY doesn't allow to set mouse coordinates. In case the user wants to move the mouse
-    // to a particular location, we can't do that while we're in the middle of receiving a packet.    
+    // to a particular location, we can't do that while we're in the middle of receiving a packet.
     // We cache packet data so we always know where we're at. In case we're requested to move the
     // mouse to a particular location, we can then (dummy-)complete the current packet.
     int8_t *packet = mouse.event.ps2packet;
     packet[mouse.state++] = (int8_t)byte;
-    
+
     if (mouse.state >= SM_RECEIVED)
     {
         mouse.state = SM_IDLE;
-        
+
         volatile uint16_t * const vicky_ps2 = (uint16_t*)VICKY_MOUSE_PACKET;
         vicky_ps2[0] = (uint16_t)packet[0];
         vicky_ps2[1] = (uint16_t)packet[1];
         vicky_ps2[2] = (uint16_t)packet[2];
-        
+
         // ... Vicky automatically updates mouse x and y ...
 
         // Detect what's changed

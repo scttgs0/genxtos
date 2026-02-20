@@ -132,7 +132,7 @@ union vicky2_color_t {
     struct __attribute__((__packed__)) {
         uint8_t blue;
         uint8_t green;
-        uint8_t red; 
+        uint8_t red;
         uint8_t alpha;
     };
 };
@@ -250,7 +250,7 @@ struct vicky2_t {
     uint32_t font_count_control;
     uint32_t reserved_0028[6];
 #endif
-    
+
     uint32_t mouse_graphics[16*16*2];
     uint16_t mouse_control; /* Must write as 32bits ! */
     uint16_t reserved_c02;

@@ -103,10 +103,10 @@
 /* Waveform selection (9 channels) e0-e8 */
 #define YM262_WAVE_SEL        (YM262_L+0xe0)
 #define  YM262_WAVE_MASK       (7<<0)
-/* Bit 5 of register 01 (YM262_WS_ENABLE_MASK) must be set to use waveforms other than sine. 
+/* Bit 5 of register 01 (YM262_WS_ENABLE_MASK) must be set to use waveforms other than sine.
  * Waveforms 4-7 are available only on OPL3 (see YM262_REG_OPL3_EN)
  * 0: sine, 1, half-sine (+only), 2:abs-sine, 3:pi/4-sine
- * 4: pi/2-sine, 5 abs(pi/2_sine), 6:square, 7:derived square */ 
+ * 4: pi/2-sine, 5 abs(pi/2_sine), 6:square, 7:derived square */
 
 /* Pairs of the operator making up a channel */
 struct op_pair { uint16_t op0; uint16_t op1; };
@@ -124,7 +124,7 @@ const uint16_t ym262_2op_pairs[18][2] = {
 	{14, 17}, /* 8 */
 	{18, 21}, /* 9 */
 	{19, 22}, /* 10 */
-	{20, 23}, /* 11 */ 
+	{20, 23}, /* 11 */
 	{24, 27}, /* 12 */
 	{25, 28}, /* 13 */
 	{26, 29}, /* 14 */
@@ -148,7 +148,7 @@ static const struct op_pair ym262_2op_with_drums_pairs[] = {
 	{17, -1}, /* Cymbal */
 	{18, 21}, /* 9 */
 	{19, 22}, /* 10 */
-	{20, 23}, /* 11 */ 
+	{20, 23}, /* 11 */
 	{24, 27}, /* 12 */
 	{25, 28}, /* 13 */
 	{26, 29}, /* 14 */
@@ -488,7 +488,7 @@ void ym262_set_block_fnum(uint16_t channel, uint16_t block, uint16_t fnum)
 void ym262_set_freq(uint16_t channel, uint32_t freq)
 {
 	uint16_t block, fnum;
-	
+
 	ym262_get_block_fnum_by_freq(freq, &block, &fnum);
 	ym262_set_block_fnum(channel, block, fnum);
 }
@@ -517,7 +517,7 @@ void ym262_get_block_fnum_by_freq(uint32_t freq, uint16_t *block, uint16_t *fnum
 
 /* This is 2^((note_nr - 69)/12) * 1000 for note_nr 0..127
  * Multiply that by the frequency of the middle A (normally 440) and
- * you'll get the frequency of notes from C-1 TO G9 note, in 10e-3 Hz, eg 
+ * you'll get the frequency of notes from C-1 TO G9 note, in 10e-3 Hz, eg
  * middle A will be 440*1000 */
 static const unsigned long tune_table[] = {
 	19, 20, 21, 23, 24, 25, 27, 28, 30, 32, 34, 36,
@@ -584,7 +584,7 @@ uint16_t main(void)
 
 #if 0
 
-	/* * 2^(20-Block) / 49716 Hz */ 
+	/* * 2^(20-Block) / 49716 Hz */
 	uint16_t block, fnum;
 	ym262_get_block_fnum_by_freq(4396*100L, &block, &fnum);
 	printf("440Hz: block %d fnum %d\n", block, fnum);

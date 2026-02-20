@@ -40,7 +40,7 @@ const uint16_t ym262_2op_pairs[18][2] = {
 	{14, 17}, /* 8 */
 	{18, 21}, /* 9 */
 	{19, 22}, /* 10 */
-	{20, 23}, /* 11 */ 
+	{20, 23}, /* 11 */
 	{24, 27}, /* 12 */
 	{25, 28}, /* 13 */
 	{26, 29}, /* 14 */
@@ -64,7 +64,7 @@ static const struct op_pair ym262_2op_with_drums_pairs[] = {
 	{17, -1}, /* Cymbal */
 	{18, 21}, /* 9 */
 	{19, 22}, /* 10 */
-	{20, 23}, /* 11 */ 
+	{20, 23}, /* 11 */
 	{24, 27}, /* 12 */
 	{25, 28}, /* 13 */
 	{26, 29}, /* 14 */
@@ -224,7 +224,7 @@ void ym262_session_write(uint32_t adr, uint8_t value)
 void ym262_session_flush(void)
 {
 	int16_t *d;
-	
+
 	if (sidx == 0)
 		return;
 
@@ -233,18 +233,18 @@ void ym262_session_flush(void)
 #if YM262_DEBUG
 	printf("sidx: %d\n",sidx);
 #endif
-	
+
 	while (sidx--) {
 		int16_t reg = *d++;
 		int16_t val = *d++;
 		reg_index[reg] = REG_NOT_USED;
-				
+
 #if !YM262_DEBUG
 		((uint8_t*)YM262_L)[reg] = val;
 		int z;
 		for(z=1;z<2000;z++);
 #endif
-		
+
 #if YM262_DEBUG
 		printf("0x%04x, 0x%02x,\n", reg, val);
 #endif
@@ -263,7 +263,7 @@ void ym262_write_reg(unsigned long adr, uint8_t value)
 #if YM262_SESSIONS
 	ym262_session_write(adr, value);
 #else
-	
+
  #if YM262_DEBUG == 0
 	*((uint8_t*)adr) = value;
  #else
@@ -496,7 +496,7 @@ void ym262_set_block_fnum(uint16_t channel, uint16_t block, uint16_t fnum)
 void ym262_set_freq(uint16_t channel, uint32_t freq)
 {
 	uint16_t block, fnum;
-	
+
 	ym262_get_block_fnum_by_freq(freq, &block, &fnum);
 	ym262_set_block_fnum(channel, block, fnum);
 }
@@ -525,7 +525,7 @@ void ym262_get_block_fnum_by_freq(uint32_t freq, uint16_t *block, uint16_t *fnum
 
 /* This is 2^((note_nr - 69)/12) * 1000 for note_nr 0..127
  * Multiply that by the frequency of the middle A (normally 440) and
- * you'll get the frequency of notes from C-1 TO G9 note, in 10e-3 Hz, eg 
+ * you'll get the frequency of notes from C-1 TO G9 note, in 10e-3 Hz, eg
  * middle A will be 440*1000 */
 static const unsigned long tune_table[] = {
 	19, 20, 21, 23, 24, 25, 27, 28, 30, 32, 34, 36,
@@ -582,11 +582,11 @@ int ym262_test(int argc, char **argv)
         ym262_channel_off(i);
 	return 0;
 #endif
-	
+
 #if YM262_SESSIONS
 	ym262_session_start(session);
 #endif
-	
+
 	/* Compute frequencies for the scale */
 	ym262_create_note_to_freq_lut(4400, scale);
 	//for (int i=0; i<128; i++)
@@ -607,7 +607,7 @@ int ym262_test(int argc, char **argv)
 	ym262_set_tremolo_depth(1);
 
 	const int n_channels = 7;
-	
+
 	for (channel=0;channel<n_channels;channel++) {
 		//opl3_test();
 		//a2560_debugnl("Set OPL3 mode");
@@ -667,7 +667,7 @@ int ym262_test(int argc, char **argv)
 #if YM262_SESSIONS
 	ym262_session_flush();
 #endif
-	
+
 	return 0;
 }
 

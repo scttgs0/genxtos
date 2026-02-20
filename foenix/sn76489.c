@@ -68,7 +68,7 @@ void sn76489_freq(uint8_t voice, uint16_t frequency) {
 /*
  * Set the period of one of the three tone voices
  * Inputs:
- * voice = the number of the voice (0 - 2). 
+ * voice = the number of the voice (0 - 2).
  * period = the period (10bits resolution, ie 0-1023)
  */
 void sn76489_tone(uint8_t voice, uint16_t period) {

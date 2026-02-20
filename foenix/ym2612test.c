@@ -25,9 +25,9 @@ int main(void)
 		ym262_get_block_fnum_by_freq(scale[i], &blocks[i], &fnums[i]);
 #if YM262_DEBUG
 		printf("%d: freq:%d block:%d fnum:%d\n", i, scale[i], blocks[i], fnums[i]);
-#else		
+#else
 		// printf("%d: freq:%lu block:%d fnum:%d\n", i, scale[i], blocks[i], fnums[i]);
-#endif		
+#endif
 	}
 
 	ym262_reset();

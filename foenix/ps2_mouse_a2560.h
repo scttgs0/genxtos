@@ -1,5 +1,5 @@
 /* PS/2 mouse driver for A2560U Foenix
- * 
+ *
  * Authors:
  *	Vincent Barrilliot
  *  Peter J Weingartner

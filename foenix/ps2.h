@@ -1,5 +1,5 @@
 /* PS/2 system
- * 
+ *
  * Authors:
  *	Vincent Barrilliot
  *
@@ -7,15 +7,15 @@
  * option any later version.  See doc/license.txt for details.
  */
 
- #ifndef _PS2_H_
- #define _PS2_H_
+#ifndef _PS2_H_
+#define _PS2_H_
 
- #include <stdint.h>
- #include <stdbool.h>
- #include <stdio.h>
- 
-  #define SUCCESS -1
- #define ERROR 0;
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdio.h>
+
+#define SUCCESS -1
+#define ERROR 0;
 
  /* ps2_init() return codes */
 #define ERR_CTRL_ERROR			 1<<0 /* Generic controller error (pretty bad) */
@@ -67,7 +67,7 @@ struct ps2_driver_api_t
 struct ps2_api_t
 {
 	/* DONT CHANGE THE ORDER otherwise the irq handler will break */
-	
+
 	/* --- INPUT parameters (provided by OS) --- */
 	/* Ever increasing counter and its frequency in Hz */
 	volatile const uint32_t *counter;

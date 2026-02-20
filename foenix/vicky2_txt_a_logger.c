@@ -291,7 +291,7 @@ void channel_A_write(const char *c)
     x = y = vicky3_a_ctrl->cursor_position;
     x &= 0xffff;
     y = (y >> 16);
-    
+
     while (c && *c)
     {
         if (*c == '\r')
@@ -374,7 +374,7 @@ static void scroll(void)
     /* This doesn't work because it uses 16/32 byte writes */
     memcpy(&text_memory->display[COL_COUNT], &text_memory->display[0], COL_COUNT*LINE_COUNT-1);
     memset(&text_memory->display[COL_COUNT*LINE_COUNT-1], COL_COUNT, 0); /* VBCC doesn't know bzero */
-#endif    
+#endif
     /* If we used background colours we would have to scroll them as well, but we don't. */
 }
 

@@ -1,5 +1,4 @@
 
-
 #include <stdint.h>
 #include <stdbool.h>
 #include "foenix.h"
@@ -77,7 +76,7 @@ void a2560_set_timer(uint16_t timer, uint32_t frequency, bool repeat, void *hand
         return;
 
     a2560_debugnl("Set timer %d, freq:%ldHz, repeat:%s, handler:%p",timer,frequency,repeat?"ON":"OFF",handler);
-    
+
     /* Identify timer control register to use */
     t = (struct a2560_timer_t *)&a2560_timers[timer];
 
@@ -187,7 +186,7 @@ uint32_t a2560_delay_calibrate(uint32_t calibration_time)
     a2560_set_timer(0, 1000/calibration_time, false, a2560_irq_calibration);
 	a2560_timer_enable(0, true);
     loop_count = a2560_run_calibration(calibration_time);
-	
+
     /* Restore everything */
     R32(INT_TIMER0_VECN) = old_timer_vector;
     a2560_irq_restore(masks);
@@ -199,7 +198,7 @@ uint32_t a2560_delay_calibrate(uint32_t calibration_time)
 	}
 
     a2560_debugnl("loop_count (new)= 0x%08lx", loop_count);
-	
+
 	loop_count /= calibration_time;
 	/* We have interrupts every 1ms so it's easy to count the number of tight loops per irq */
     //if (loop_count)

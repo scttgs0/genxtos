@@ -1,5 +1,5 @@
-/* PS/2 keyboard driver 
- * 
+/* PS/2 keyboard driver
+ *
  * Authors:
  *	Vincent Barrilliot
  *  Peter J Weingartner
@@ -50,7 +50,7 @@ typedef enum sm_state
 
 /* Translation tables */
 /* Scancodes for E0xx. The index is xx */
-static const uint8_t scancodeSet1_E0_to_key[128] = 
+static const uint8_t scancodeSet1_E0_to_key[128] =
 {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x00 - 0x07 */
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 0x08 - 0x0F */

@@ -1,6 +1,6 @@
 /* ps2_mouse_a2560 - PS/2 mouse driver for A2560U Foenix
  * This is really a bridge between the PS/2, OS and VICKY mouse handling
- * 
+ *
  * Author:
  *	Vincent Barrilliot
  *
@@ -84,10 +84,10 @@ static void on_change(const vicky_mouse_event_t *event)
 void process(struct ps2_driver_api_t *api, uint8_t byte)
 {
 #if MAXIMUM_TOS_COMPATIBILITY
-    /* This is the slower but more compatible option. We write VICKY PS/2 registers as it's the 
+    /* This is the slower but more compatible option. We write VICKY PS/2 registers as it's the
      * only way (currently?) to get the mouse cursor to move. But we simulate an IKBD relative mouse
      * packet and pass it to the "mousevec" vector of the TOS so all TOS hooks etc. can work. */
-    
+
     vicky_mouse_ps2(byte);
 #else
     /* This is maximum speed setup. The IKBD handling stuff (mousevec) is bypassed, we directly update line-A variables
@@ -107,7 +107,7 @@ void process(struct ps2_driver_api_t *api, uint8_t byte)
         x = R16(VICKY_MOUSE_X);
         y = R16(VICKY_MOUSE_Y);
         buttons = packet[0] & 3;
-    
+
         /* Update cur_ms_stat flags:
          * 0x01 Left mouse button status  (0=up)
          * 0x02 Right mouse button status (0=up)
@@ -136,7 +136,7 @@ void process(struct ps2_driver_api_t *api, uint8_t byte)
         GCURY = linea_max_y - R16(VICKY_MOUSE_Y);
         MOUSE_BT = (MOUSE_BT & 0xfffc) | buttons;
         cur_ms_stat = new_cur_ms_stat;
-        
+
         /* Fire callbacks */
         if (cur_ms_stat & (0x40|0x80))
             user_but();

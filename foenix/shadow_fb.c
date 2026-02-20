@@ -42,7 +42,7 @@ void a2560_sfb_setup(const uint8_t *addr, uint16_t text_cell_height)
     // a2560_debug("a2560_sfb_setup(%p,%d)", addr, text_cell_height);
     a2560_sfb_addr = (uint8_t *)addr;
     a2560_sfb_text_cell_height = text_cell_height;
-    
+
     vicky2_read_video_mode(vicky, &mode);
     a2560_sfb_size = mode.w * mode.h;
     a2560_sfb_line_size_in_bytes = mode.w;

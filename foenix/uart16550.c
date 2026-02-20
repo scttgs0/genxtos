@@ -94,7 +94,7 @@ uint32_t uart16550_bps_code_to_actual(uint16_t bps_code) {
 /* Return the code for the speed currently set */
 uint16_t uart16550_get_bps_code(const UART16550 *uart) {
     uint16_t bps_code;
- 
+
     /* Set DLAB */
     R8(uart)[LCR] |= DLAB;
 
@@ -103,7 +103,7 @@ uint16_t uart16550_get_bps_code(const UART16550 *uart) {
 
     /* Unset DLAB */
     R8(uart)[LCR] &= ~DLAB;
-    
+
     return bps_code;
 }
 

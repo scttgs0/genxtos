@@ -1,6 +1,6 @@
 /*
  * foenix.h - Foenix Retro System computer specific definition.
- * 
+ *
  * This file is also used from assembly files so must not contain
  * C-related definitions.
  *
@@ -31,13 +31,13 @@
 
 #ifdef MACHINE_A2560U
   #define CPU_FREQ        20000000   /* 20Mhz : TODO get rid of this and use cpu_freq */
-  #define SRAM_TOP        0x00400000 /* Address of first byte after SRAM */ 
+  #define SRAM_TOP        0x00400000 /* Address of first byte after SRAM */
   #define GAVIN           0x00B00000
   #define BEATRIX         0x00B20000
   #define VICKY           0x00B40000
   #define VICKY_TEXT      (VICKY+VICKY_TEXT_MEM_OFFSET)
   #define VICKY_TEXT_MEM  VICKY_TEXT
-  #define VICKY_FONT      (VICKY+VICKY_FONT_MEM_OFFSET)      /* Font memory (-> 0xbff) */  
+  #define VICKY_FONT      (VICKY+VICKY_FONT_MEM_OFFSET)      /* Font memory (-> 0xbff) */
   #define VRAM_Bank0      0x00C00000
   #define VRAM0_SIZE      0x00200000 /* 2MB */
 
@@ -63,11 +63,11 @@
   #define VICKY_B         0xFEC80000
   #define VICKY_FONT_B    (VICKY_B+VICKY_FONT_MEM_OFFSET)
   #define VICKY_TEXT_B    (VICKY_B+VICKY_TEXT_MEM_OFFSET)
-  
+
   /* Convenience, we treat the most feature-full screen as main screen (so to share code with the U which only has 1 screen) */
   #define VICKY VICKY_B
   #define VICKY_TEXT VICKY_TEXT_B
-  
+
   #elif defined(MACHINE_A2560M)
   #define SRAM_TOP              0x00800000 /* Address of first byte after SRAM */
   #define VICKY2                0xFEC80000 /* This is a limited "legacy" mode with no bitmap */
@@ -120,7 +120,7 @@
 /* IDE and SDCard */
 #if defined(MACHINE_A2560K) || defined(MACHINE_A2560X) || defined(MACHINE_GENX) || defined(MACHINE_A2560U)
 #define IDE_BASE       (GAVIN+0x400)
-#define SDC_BASE       (GAVIN+0x300)	
+#define SDC_BASE       (GAVIN+0x300)
 #elif defined(MACHINE_A2560M)
 #define SDC_BASE       (GAVIN+0x300) /* SD Card 0 (front panel) */
 #define SDC1_BASE      (GAVIN+0x380) /* SD Card 1 (main board) */
@@ -133,7 +133,7 @@
 #define SDC_STATE      (GAVIN+0x518) /* Read as 32bits on the M (don't know on the K) */
 #endif
 #define SDC_STATE_ABSENT 0x0200
-#define SDC_STATE_WRITE_PROTECTED 0x0100  
+#define SDC_STATE_WRITE_PROTECTED 0x0100
 
 
 #define GAVIN_CTRL              (GAVIN)
@@ -177,7 +177,7 @@
 #endif
 #if defined(MACHINE_A2560M)
 /* UART3 is in the FPGA and is emulated through the serial port,
- * it's the last of the 4 serial ports that the Foenix exposes through USB 
+ * it's the last of the 4 serial ports that the Foenix exposes through USB
  * (first = JTAG, second: debug port, third: USB OTG, fourth: UART)
  * It doesn't need to be initialised, and is 8N1 115200bps by default.
  */

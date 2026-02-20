@@ -23,7 +23,7 @@ uint32_t bq4802ly_ticks;
 void (*bq4802ly_tick_handler)(void);
 
 
-/* Private stuff */ 
+/* Private stuff */
 static struct bq4802ly_t* const bq4802ly = (struct bq4802ly_t * const)BQ4802LY_BASE;
 static void stop(uint8_t *control);
 static void start(uint8_t control);
@@ -89,7 +89,7 @@ void bq4802ly_set_datetime(uint8_t day, uint8_t month, uint16_t year, uint8_t ho
     uint8_t  century_bcd, year_bcd, month_bcd, day_bcd;
     uint16_t century;
     uint8_t  hour_bcd, minute_bcd, second_bcd;
-    
+
     century = year / 100;
     year = year - (century * 100);
 
@@ -131,7 +131,7 @@ void bq4802ly_get_datetime(uint8_t *day, uint8_t *month, uint16_t *year, uint8_t
     uint8_t hour_bcd, minute_bcd, second_bcd;
 
     stop(&control);
-    
+
     century_bcd = bq4802ly->century;
     year_bcd = bq4802ly->year;
     month_bcd = bq4802ly->month;
@@ -142,7 +142,7 @@ void bq4802ly_get_datetime(uint8_t *day, uint8_t *month, uint16_t *year, uint8_t
 
     /* Re-enable updates to the clock */
     start(control);
-    
+
     *year = bcd_to_i(century_bcd) * 100 + bcd_to_i(year_bcd);
     *month = bcd_to_i(month_bcd);
     *day = bcd_to_i(day_bcd);
@@ -158,9 +158,9 @@ void bq4802ly_get_datetime(uint8_t *day, uint8_t *month, uint16_t *year, uint8_t
  * Returns a byte containing n as a BCD number, 0 if error. */
 static uint8_t i_to_bcd(uint16_t n)
 {
-    if (n > 99) 
+    if (n > 99)
         return 0; /* Input was out of range */
-    
+
     uint8_t tens = n / 10;
     uint8_t ones = n - (tens * 10);
 

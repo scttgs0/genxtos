@@ -14,7 +14,7 @@
 #if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
 
 struct IDE
-{   
+{
     uint16_t data;
     uint8_t features; /* Read: error */
     uint8_t filler03[1];

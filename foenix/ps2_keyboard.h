@@ -1,5 +1,5 @@
-/* PS/2 keyboard driver 
- * 
+/* PS/2 keyboard driver
+ *
  * Authors:
  *	Vincent Barrilliot
  *  Peter J Weingartner
