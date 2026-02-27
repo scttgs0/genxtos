@@ -27,7 +27,6 @@
 #include "gemqueue.h"
 
 
-
 static void doq(WORD donq, AESPD *p, QPB *m)
 {
     WORD n, index;
@@ -104,7 +103,7 @@ void aqueue(WORD isqwrite, EVB *e, LONG lm)
     if (qready)
     {
         doq(isqwrite, p, m);
-        azombie(e, 1);          /* ap_rdwr() will return 1 => OK */ 
+        azombie(e, 1);          /* ap_rdwr() will return 1 => OK */
         if ((e = *ppe) != 0)    /* assignment ok */
         {
             e->e_flag |= NOCANCEL;

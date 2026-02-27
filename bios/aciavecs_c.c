@@ -140,8 +140,6 @@ void int_acia_c(void) {
 }
 
 
-
-
 // Handle MIDI interrupt
 static void midisys_handler(void) {
 #if CONF_WITH_MIDI_ACIA
@@ -158,7 +156,6 @@ static void midisys_handler(void) {
     }
 #endif /* CONF_WITH_MIDI_ACIA */
 }
-
 
 
 // Handle keyboard/mouse interrupt

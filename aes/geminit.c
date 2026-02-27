@@ -133,7 +133,6 @@ GLOBAL WORD     curpid;
 GLOBAL THEGLO   D;
 
 
-
 /*
  *  return size of global area
  *  called from gemstart.S
@@ -366,7 +365,7 @@ static BOOL process_inf2(BOOL *isauto)
         set_cache(aes_configuration.cpu_cache_on);
 #endif
 
-    *isauto = !(bootflags & BOOTFLAG_SKIP_AUTO_ACC) && (aes_configuration.flags & AES_CFG_PROVIDES_AUTOSTART);   
+    *isauto = !(bootflags & BOOTFLAG_SKIP_AUTO_ACC) && (aes_configuration.flags & AES_CFG_PROVIDES_AUTOSTART);
     if (isauto)
     {
         char path[MAXPATHLEN];
@@ -708,7 +707,7 @@ static BOOL handle_resolution_change(void)
             break;
         }
     }
-    
+
     /* We've handled the change, doesn't need to be done again. */
     gl_changerez = NO_RES_CHANGE;
 

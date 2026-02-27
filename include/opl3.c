@@ -53,9 +53,9 @@ struct ops_4
 +------------+--------------------------------------------------------------+
 | Operator 1 | 0  1  2  6  7  8  12 13 14 18 19  20  24  25  26  30  31  32 |
 | Operator 2 | 3  4  5  9  10 11 15 16 17 21 22  23  27  28  29  33  34  35 |
-+------------+--------------------------------------------------------------+*/    
++------------+--------------------------------------------------------------+*/
 
-const struct ops_2 ops_2op[] = 
+const struct ops_2 ops_2op[] =
 {
     {0,3}, {1,4}, {2,5}, {6,9}, {7,10}, {8,11}, {12,15}, {13,16}, /* 0-7 */
     {14,17}, {18,21}, {19,22}, {20,23}, {24,27}, {25,28}, {26,29}, {30,33}, /* 8-15 */
@@ -69,7 +69,7 @@ const struct ops_2 ops_2op[] =
 | Operator 1 | 0  1  2  6  7  8  12 16 14 17 13  18 19 20 24 25 26 30 31 32 |
 | Operator 2 | 3  4  5  9  10 11 15              21 22 23 27 28 29 33 34 35 |
 +------------+--------------------------------------------------------------+*/
-const struct ops_2 ops_drums[] = 
+const struct ops_2 ops_drums[] =
 {
     {0,3}, {1,4}, {2,5}, {6,9}, {7,10}, {8,11}, /* 0-5 */
     {12,15},            /* Bass drum */
@@ -90,18 +90,18 @@ const struct ops_2 ops_drums[] =
 | Operator 3 | 6   7   8                 24  25  26              |
 | Operator 4 | 9   10  11                27  28  29              |
 +------------+---------------------------------------------------+*/
-const struct ops_4 ops_4op[] = 
+const struct ops_4 ops_4op[] =
 {
     {0,3,6,9}, {1,4,7,10}, {2,5,8,11}, /* 0-2 */
     {OP_UNUSED,OP_UNUSED,OP_UNUSED,OP_UNUSED}, /* 3 */
     {OP_UNUSED,OP_UNUSED,OP_UNUSED,OP_UNUSED}, /* 4 */
-    {OP_UNUSED,OP_UNUSED,OP_UNUSED,OP_UNUSED}, /* 5 */    
+    {OP_UNUSED,OP_UNUSED,OP_UNUSED,OP_UNUSED}, /* 5 */
     {12,15,OP_UNUSED,OP_UNUSED}, {13,16,OP_UNUSED,OP_UNUSED}, /* 6-7*/
     {14,17,OP_UNUSED,OP_UNUSED}, /* 8 */
     {18,21,24,27}, {19,22,25,28}, {20,23,26,29}, /* 9-11 */
     {OP_UNUSED,OP_UNUSED,OP_UNUSED,OP_UNUSED}, /* 12 */
     {OP_UNUSED,OP_UNUSED,OP_UNUSED,OP_UNUSED}, /* 13 */
-    {OP_UNUSED,OP_UNUSED,OP_UNUSED,OP_UNUSED}, /* 14 */    
+    {OP_UNUSED,OP_UNUSED,OP_UNUSED,OP_UNUSED}, /* 14 */
     {30,33,OP_UNUSED,OP_UNUSED}, {31,34,OP_UNUSED,OP_UNUSED}, /* 15-16 */
     {32,35,OP_UNUSED,OP_UNUSED}
 };
@@ -126,11 +126,6 @@ bit 6: Timer 1 Mask. If 1, status register is not affected in overflow.
 bit 5: Timer 2 Mask. Same as above.
 bit 1: Timer 2 Start. Timer on/off.
 bit 0: Timer 1 Start. Same as above. */
-
-
-
-
-
 
  /* Four-operator enable */
 /* +-7-+-6-+-5-+-4-+-3-+-2-+-1-+-0-+
@@ -324,29 +319,29 @@ void opl3_init(void)
 #ifndef R8
     #define R8(x) *((int8_t * volatile)(x))
 #endif
- 
+
 struct __PACKED__ opl3_base_l_t {
     uint8_t dummy0;      /* 0x00 */
     uint8_t lsi_test;   /* 0x01 */
-    uint8_t timer1;     /* 0x02 */    
+    uint8_t timer1;     /* 0x02 */
     uint8_t timer2;     /* 0x03 */
     uint8_t rst_mt1_mt2_st2_st1; /* 0x04 */
     uint8_t dummy5;
     uint8_t dummy6;
     uint8_t dummy7;
-    uint8_t nts;        /* 0x 08 */    
+    uint8_t nts;        /* 0x 08 */
 };
 
 struct __PACKED__ opl3_base_h_t {
     uint8_t dummy0;      /* 0x00 */
     uint8_t lsi_test;   /* 0x01 */
-    uint8_t dummy1;     /* 0x02 */    
+    uint8_t dummy1;     /* 0x02 */
     uint8_t dummy2;     /* 0x03 */
     uint8_t connectionsel; /* 0x04 */
     uint8_t new;
     uint8_t dummy6;
     uint8_t dummy7;
-    uint8_t dummy8;     /* 0x 08 */    
+    uint8_t dummy8;     /* 0x 08 */
 };
 
 struct __PACKED__ opl3_data_l_t {
@@ -382,7 +377,7 @@ struct __PACKED__ opl3_data_h_t {
     uint8_t unused_a9_af[7];
     uint8_t kon_block_fnumberh[9];
     uint8_t unused_b9_bf[7];
-    uint8_t chd_chc_chb_cha_fb_cnt[9];    
+    uint8_t chd_chc_chb_cha_fb_cnt[9];
     uint8_t unused_c9_df[23];
     uint8_t ws[22];
 };
@@ -390,13 +385,13 @@ struct __PACKED__ opl3_data_h_t {
 struct __PACKED__ opl3_l_t {
     struct opl3_base_l_t b;
     uint8_t unused_09_1f[23];
-    struct opl3_data_l_t d;    
+    struct opl3_data_l_t d;
 };
 
 struct __PACKED__ opl3_h_t {
     struct opl3_base_h_t b;
     uint8_t unused_09_1f[23];
-    struct opl3_data_h_t d;    
+    struct opl3_data_h_t d;
 };
 
 static volatile struct opl3_l_t *opl3_l;
@@ -438,32 +433,32 @@ void main(void)
     printf("********************** Structure offsets:\n");
     printf("Low:\n");
     printf(" lsi_test: 0x%02lx\n",offsetof(struct opl3_l_t,b.lsi_test));
-    printf(" timer1: 0x%02lx\n",offsetof(struct opl3_l_t,b.timer1));    
-    printf(" timer2: 0x%02lx\n",offsetof(struct opl3_l_t,b.timer2));    
-    printf(" rst_mt1_mt2_st2_st1: 0x%02lx\n",offsetof(struct opl3_l_t,b.rst_mt1_mt2_st2_st1));    
-    printf(" nts: 0x%02lx\n",offsetof(struct opl3_l_t,b.nts));    
+    printf(" timer1: 0x%02lx\n",offsetof(struct opl3_l_t,b.timer1));
+    printf(" timer2: 0x%02lx\n",offsetof(struct opl3_l_t,b.timer2));
+    printf(" rst_mt1_mt2_st2_st1: 0x%02lx\n",offsetof(struct opl3_l_t,b.rst_mt1_mt2_st2_st1));
+    printf(" nts: 0x%02lx\n",offsetof(struct opl3_l_t,b.nts));
     printf(" am_biv_egt_ksr_mult: 0x%02lx\n",offsetof(struct opl3_l_t,d.am_biv_egt_ksr_mult));
-    printf(" ksl_tl: 0x%02lx\n",offsetof(struct opl3_l_t,d.ksl_tl));    
-    printf(" ar_dr: 0x%02lx\n",offsetof(struct opl3_l_t,d.ar_dr));    
-    printf(" sl_rr: 0x%02lx\n",offsetof(struct opl3_l_t,d.sl_rr));    
-    printf(" fnumberl: 0x%02lx\n",offsetof(struct opl3_l_t,d.fnumberl));    
-    printf(" kon_block_fnumberh: 0x%02lx\n",offsetof(struct opl3_l_t,d.kon_block_fnumberh));    
-    printf(" dam_dvb_ryt_bd_sd_tom_tc_hh: 0x%02lx\n",offsetof(struct opl3_l_t,d.dam_dvb_ryt_bd_sd_tom_tc_hh));    
-    printf(" chd_chc_chb_cha_fb_cnt: 0x%02lx\n",offsetof(struct opl3_l_t,d.chd_chc_chb_cha_fb_cnt));    
-    printf(" ws: 0x%02lx\n",offsetof(struct opl3_l_t,d.ws));    
+    printf(" ksl_tl: 0x%02lx\n",offsetof(struct opl3_l_t,d.ksl_tl));
+    printf(" ar_dr: 0x%02lx\n",offsetof(struct opl3_l_t,d.ar_dr));
+    printf(" sl_rr: 0x%02lx\n",offsetof(struct opl3_l_t,d.sl_rr));
+    printf(" fnumberl: 0x%02lx\n",offsetof(struct opl3_l_t,d.fnumberl));
+    printf(" kon_block_fnumberh: 0x%02lx\n",offsetof(struct opl3_l_t,d.kon_block_fnumberh));
+    printf(" dam_dvb_ryt_bd_sd_tom_tc_hh: 0x%02lx\n",offsetof(struct opl3_l_t,d.dam_dvb_ryt_bd_sd_tom_tc_hh));
+    printf(" chd_chc_chb_cha_fb_cnt: 0x%02lx\n",offsetof(struct opl3_l_t,d.chd_chc_chb_cha_fb_cnt));
+    printf(" ws: 0x%02lx\n",offsetof(struct opl3_l_t,d.ws));
 
     printf("\nHigh:\n");
-    printf(" lsi_test: 0x%02lx\n",offsetof(struct opl3_h_t,b.lsi_test)); 
+    printf(" lsi_test: 0x%02lx\n",offsetof(struct opl3_h_t,b.lsi_test));
     printf(" connectionsel: 0x%02lx\n",offsetof(struct opl3_h_t,b.connectionsel));
     printf(" new: 0x%02lx\n",offsetof(struct opl3_h_t,b.new));
     printf(" am_biv_egt_ksr_mult: 0x%02lx\n",offsetof(struct opl3_h_t,d.am_biv_egt_ksr_mult));
-    printf(" ksl_tl: 0x%02lx\n",offsetof(struct opl3_h_t,d.ksl_tl));    
-    printf(" ar_dr: 0x%02lx\n",offsetof(struct opl3_h_t,d.ar_dr));    
-    printf(" sl_rr: 0x%02lx\n",offsetof(struct opl3_h_t,d.sl_rr));    
-    printf(" fnumberl: 0x%02lx\n",offsetof(struct opl3_h_t,d.fnumberl));    
-    printf(" kon_block_fnumberh: 0x%02lx\n",offsetof(struct opl3_h_t,d.kon_block_fnumberh));    
-    printf(" chd_chc_chb_cha_fb_cnt: 0x%02lx\n",offsetof(struct opl3_h_t,d.chd_chc_chb_cha_fb_cnt));    
-    printf(" ws: 0x%02lx\n",offsetof(struct opl3_h_t,d.ws));  
+    printf(" ksl_tl: 0x%02lx\n",offsetof(struct opl3_h_t,d.ksl_tl));
+    printf(" ar_dr: 0x%02lx\n",offsetof(struct opl3_h_t,d.ar_dr));
+    printf(" sl_rr: 0x%02lx\n",offsetof(struct opl3_h_t,d.sl_rr));
+    printf(" fnumberl: 0x%02lx\n",offsetof(struct opl3_h_t,d.fnumberl));
+    printf(" kon_block_fnumberh: 0x%02lx\n",offsetof(struct opl3_h_t,d.kon_block_fnumberh));
+    printf(" chd_chc_chb_cha_fb_cnt: 0x%02lx\n",offsetof(struct opl3_h_t,d.chd_chc_chb_cha_fb_cnt));
+    printf(" ws: 0x%02lx\n",offsetof(struct opl3_h_t,d.ws));
 }
 
 #endif

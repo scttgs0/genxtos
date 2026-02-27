@@ -72,7 +72,6 @@ static const WORD SIZ_TAB_rom[12] = {
 };
 
 
-
 /* Here's the template INQ_TAB, see lineavars.S for the normal INQ_TAB */
 static const WORD INQ_TAB_rom[45] = {
     4,                  /* 0  - type of alpha/graphic controllers */
@@ -122,7 +121,6 @@ static const WORD INQ_TAB_rom[45] = {
     0,                  /* 43 - unprintable lower border in pixels (printers/plotters) */
     0                   /* 44 - page size (printers etc.) */
 };
-
 
 
 /* Here's the template DEV_TAB, see lineavars.S for the normal DEV_TAB! */
@@ -175,7 +173,6 @@ static const WORD DEV_TAB_rom[45] = {
 };
 
 
-
 Vwk * get_vwk_by_handle(WORD handle)
 {
     if ((handle < FIRST_VDI_HANDLE) || (handle > LAST_VDI_HANDLE))
@@ -183,7 +180,6 @@ Vwk * get_vwk_by_handle(WORD handle)
 
     return vwk_ptr[handle];
 }
-
 
 
 /*
@@ -240,7 +236,6 @@ void vdi_vs_clip(Vwk * vwk)
 }
 
 
-
 /* SET_WRITING_MODE: */
 void vdi_vswr_mode(Vwk * vwk)
 {
@@ -252,7 +247,6 @@ void vdi_vswr_mode(Vwk * vwk)
     INTOUT[0] = wm;
     vwk->wrt_mode = wm - 1;
 }
-
 
 
 static void init_wk(Vwk * vwk)
@@ -369,7 +363,6 @@ static void init_wk(Vwk * vwk)
 }
 
 
-
 /*
  * build a chain of Vwks
  *
@@ -390,7 +383,6 @@ static void build_vwk_chain(void)
     }
     prev->next_work = NULL;
 }
-
 
 
 void vdi_v_opnvwk(Vwk * vwk)
@@ -480,7 +472,6 @@ void vdi_v_clsvwk(Vwk * vwk)
 }
 
 
-
 /* OPEN_WORKSTATION: */
 void vdi_v_opnwk(Vwk * vwk)
 {
@@ -559,7 +550,6 @@ void vdi_v_opnwk(Vwk * vwk)
 }
 
 
-
 /* CLOSE_WORKSTATION: */
 void vdi_v_clswk(Vwk * vwk)
 {
@@ -579,7 +569,6 @@ void vdi_v_clswk(Vwk * vwk)
     vdimouse_exit();                    /* deinitialize mouse */
     esc_exit(vwk);                      /* back to console mode */
 }
-
 
 
 /*
@@ -608,7 +597,6 @@ void vdi_v_clrwk(Vwk * vwk)
     }
     memset(v_bas_ad, fill, size);
 }
-
 
 
 /*

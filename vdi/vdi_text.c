@@ -1096,7 +1096,6 @@ void vdi_vqt_width(Vwk * vwk)
 }
 
 
-
 void vdi_vqt_name(Vwk * vwk)
 {
     WORD i, element, current_font_id;

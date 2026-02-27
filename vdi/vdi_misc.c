@@ -21,7 +21,6 @@
 static BOOL in_proc;                   /* flag, if we are still running */
 
 
-
 /*
  * arb_corner - copy and sort (arbitrate) the corners
  *
@@ -43,7 +42,6 @@ void arb_corner(Rect * rect)
         rect->y2 = temp;
     }
 }
-
 
 
 /*
@@ -69,7 +67,6 @@ void arb_line(Line * line)
 }
 
 
-
 /*
  * tick_int -  VDI Timer interrupt routine
  *
@@ -88,7 +85,6 @@ static void tick_int(int u)
     tim_chain(u);                       /* call the old timer vector too */
                                         /* and back from stack */
 }
-
 
 
 /*
@@ -112,7 +108,6 @@ void vdi_vex_timv(Vwk * vwk)
 }
 
 
-
 /*
  * timer_init - initialize the timer
  *
@@ -134,7 +129,6 @@ void timer_init(void)
 }
 
 
-
 /*
  * timer_exit - de-initialize the time
  *
@@ -148,4 +142,3 @@ void timer_exit(void)
     Setexc(0x100, (long)tim_chain);     /* set etv_timer to tick_int */
     set_sr(old_sr);                     /* enable interrupts */
 }
-

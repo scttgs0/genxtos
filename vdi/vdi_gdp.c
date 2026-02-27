@@ -104,7 +104,6 @@ static UWORD Isin(WORD angle)
 }
 
 
-
 /*
  * Icos - Return integer cosine between 0 and 32767
  *
@@ -114,7 +113,6 @@ static UWORD Icos(UWORD angle)
 {
     return Isin(HALFPI-angle);
 }
-
 
 
 /*
@@ -170,7 +168,6 @@ static void clc_pts(Point *point, WORD angle)
 }
 
 
-
 /*
  * clc_arc - calculates the positions of all the points necessary to draw
  *           a circular/elliptical arc (or a circle/ellipse), and draws it
@@ -220,7 +217,6 @@ static void clc_arc(Vwk * vwk, int steps)
     else
         polygon(vwk, point, steps);
 }
-
 
 
 /*
@@ -338,7 +334,6 @@ static void gdp_rbox(Vwk *vwk)
 }
 
 
-
 /*
  * clc_nsteps - calculates the number of line segments ('steps') to draw
  *              for a circle/ellipse, based on the larger of xrad/yrad,
@@ -361,7 +356,6 @@ static int clc_nsteps(void)
 
     return steps;
 }
-
 
 
 /*
@@ -417,7 +411,6 @@ static void gdp_curve(Vwk *vwk)
 
     clc_arc(vwk, steps);
 }
-
 
 
 /*

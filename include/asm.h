@@ -320,7 +320,6 @@ __extension__                             \
 })
 
 
-
 /*
  * void regsafe_call(void *addr)
  *   Saves all registers to the stack, calls the function
@@ -345,7 +344,6 @@ __extension__                                      \
                     : : "a"(addr): "memory");      \
 })
 #endif
-
 
 
 /*

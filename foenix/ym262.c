@@ -257,7 +257,6 @@ void ym262_session_flush(void)
 #endif // SESSIONS
 
 
-
 void ym262_write_reg(unsigned long adr, uint8_t value)
 {
 #if YM262_SESSIONS
@@ -342,7 +341,6 @@ void ym262_reset(void)
 	ym262_write_reg(YM262_REG_TEST, 0);
 	ym262_write_reg(YM262_REG_OPL3_EN, YM262_OPL3_EN_MASK);
 }
-
 
 
 /* Oscillator is 0/1 for 2-osc mode, 0-3 for 4-op mode */

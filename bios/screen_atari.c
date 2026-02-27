@@ -651,7 +651,6 @@ static WORD screen_can_change_resolution_atari(void)
 }
 
 
-
 WORD shifter_get_monitor_type(void)
 {
     volatile UBYTE *gpip = (UBYTE *)0xfffffa01;

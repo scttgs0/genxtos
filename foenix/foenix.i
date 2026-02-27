@@ -48,7 +48,6 @@
 | Video memory sections
 
 
-
 | GAVIN -----------------------------------------------------------------------
     .EQU RTC,               (GAVIN+0x80)
         .EQU RTC_FLAGS,     (RTC+0x26)

@@ -12,7 +12,6 @@
  */
 
 
-
 #ifndef BIOSBIND_H
 #define BIOSBIND_H
 
@@ -32,7 +31,6 @@
 #define Bgettpa() bios_l_w(0xc,a)
 #define Balloc(a,b) bios_l_lw(0xd,a,b)
 #define Bdrvrem() bios_l_v(0xe)
-
 
 
 static __inline__ void bios_v_l(int op, long a)
@@ -61,7 +59,6 @@ static __inline__ void bios_v_ww(int op, short a, short b)
          : "d0", "d1", "d2", "a0", "a1", "a2", "memory", "cc"
         );
 }
-
 
 
 static __inline__ short bios_w_w(int op, short a)

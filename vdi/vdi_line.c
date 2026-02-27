@@ -140,7 +140,6 @@ void vdi_vql_attributes(Vwk * vwk)
 }
 
 
-
 /*
  * draw_rect_common - draw one or more horizontal lines
  *

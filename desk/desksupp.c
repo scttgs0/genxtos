@@ -198,7 +198,6 @@ void desk_verify(WORD wh, WORD changed)
 }
 
 
-
 void do_wredraw(WORD w_handle, GRECT *gptr)
 {
     GRECT clip_r, t;
@@ -544,7 +543,7 @@ static WORD user_input(WORD c, BOOL flow_control)
 
     /* wants to quit */
     if ((c == CTL_C) || (c == 'Q') || (c == 'q')
-#ifdef UNDO    
+#ifdef UNDO
      || (c == UNDO)
 #endif
      )

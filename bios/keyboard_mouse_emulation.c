@@ -45,7 +45,6 @@ static WORD mouse_action_key_pressed_count;
 static BOOL is_mouse_action_key(WORD scancode);
 
 
-
 void mouse_emulation_init(void) {
     MOUSE_EMULATION_MODE = FALSE;    /* not doing mouse emulation */
     mouse_action_key_pressed_count = 0;  /* no arrow keys pressed initially */
@@ -69,7 +68,7 @@ void mouse_emulation_handle_key_released(WORD scancode) {
 
     if (mouse_action_key_pressed_count > 0)
         mouse_action_key_pressed_count--;
- 
+
     handle_mouse_mode(scancode);    /* exit mouse mode if appropriate */
 }
 

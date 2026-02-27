@@ -77,7 +77,6 @@ static WORD gloc_key(void)
 }
 
 
-
 /*
  * LOCATOR_INPUT: implements vrq_locator()/vsm_locator()
  *
@@ -160,7 +159,6 @@ void vdi_v_locator(Vwk * vwk)
 }
 
 
-
 /*
  * vdi_v_show_c - show cursor
  */
@@ -170,7 +168,6 @@ void vdi_v_show_c(Vwk * vwk)
 }
 
 
-
 /*
  * vdi_v_hide_c - hide cursor
  */
@@ -178,7 +175,6 @@ void vdi_v_hide_c(Vwk * vwk)
 {
     linea_mouse_hide();
 }
-
 
 
 /*
@@ -196,7 +192,6 @@ void vdi_vq_mouse(Vwk * vwk)
 
     set_sr(old_sr);             /* enable interrupts */
 }
-
 
 
 /*
@@ -220,7 +215,6 @@ void vdi_vex_butv(Vwk * vwk)
 }
 
 
-
 /*
  * vdi_vex_motv
  *
@@ -239,7 +233,6 @@ void vdi_vex_motv(Vwk * vwk)
     ULONG_AT(&CONTRL[9]) = (ULONG) user_mot;
     user_mot = (PFVOID) ULONG_AT(&CONTRL[7]);
 }
-
 
 
 /*

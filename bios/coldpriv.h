@@ -498,7 +498,6 @@ typedef volatile unsigned long vuint32;
 #define MCF_GPIO_PCLRR_DSPI                  (*(vuint8 *)(&__MBAR[0xA3E]))
 
 
-
 /* Bit definitions and macros for MCF_GPIO_PODR_FBCTL */
 #define MCF_GPIO_PODR_FBCTL_PODR_FBCTL0      (0x1)
 #define MCF_GPIO_PODR_FBCTL_PODR_FBCTL1      (0x2)
@@ -1954,7 +1953,6 @@ typedef volatile unsigned long vuint32;
 #define MCF_INTC_L7IACK                      (*(vuint8 *)(&__MBAR[0x7FC]))
 #define MCF_INTC_ICR(x)                      (*(vuint8 *)(&__MBAR[0x741 + ((x-1)*0x1)]))
 #define MCF_INTC_LIACK(x)                    (*(vuint8 *)(&__MBAR[0x7E4 + ((x-1)*0x4)]))
-
 
 
 /* Bit definitions and macros for MCF_INTC_IPRH */

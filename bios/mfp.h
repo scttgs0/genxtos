@@ -48,8 +48,6 @@ void mfp_init(void);
 void mfp_setup_timer(MFP *mfp,WORD timer, WORD control, WORD data);
 
 
-
-
 # if CONF_WITH_FDC || CONF_WITH_ACSI
 
 /* Returns TRUE if the timeout elapsed before the gpip changed. The delay is in 200Hz ticks */

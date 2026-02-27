@@ -302,7 +302,6 @@ static void blank_out(int topx, int topy, int botx, int boty)
 }
 
 
-
 /*
  * scroll_up - Scroll upwards
  *
@@ -327,9 +326,8 @@ static void scroll_up(const CHAR_ADDR src, CHAR_ADDR dst, ULONG count)
     memmove(dst.pxaddr, src.pxaddr, count);
 
     /* exit thru blank out, bottom line cell address y to top/left cell */
-    blank_out(0, v_cel_my , v_cel_mx, v_cel_my);   
+    blank_out(0, v_cel_my , v_cel_mx, v_cel_my);
 }
-
 
 
 /*
@@ -342,7 +340,7 @@ static void scroll_down(const CHAR_ADDR src, CHAR_ADDR dst, LONG count, UWORD st
     memmove(dst.pxaddr, src.pxaddr, count);
 
     /* exit thru blank out */
-    blank_out(0, start_line , v_cel_mx, start_line);   
+    blank_out(0, start_line , v_cel_mx, start_line);
 }
 
 

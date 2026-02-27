@@ -368,7 +368,6 @@ static void cur_display16(MCDB *sprite, MCS *mcs, WORD x, WORD y)
 #endif
 
 
-
 /*
  * linea_sprite_hide_atari - replace cursor with data in save area
  *

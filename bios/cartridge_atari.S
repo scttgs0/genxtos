@@ -22,7 +22,6 @@ _cartridge_atari_boot:
 .rts:   rts
 
 
-
 /*
  * void run_cartridge_applications(WORD typebit);
  *

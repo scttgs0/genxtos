@@ -14,7 +14,6 @@
 #include "vdi_defs.h"
 
 
-
 /* Marker definitions */
 static const WORD m_dot[] = { 1, 2, 0, 0, 0, 0 };
 static const WORD m_plus[] = { 2, 2, 0, -3, 0, 3, 2, -4, 0, 4, 0 };
@@ -22,7 +21,6 @@ static const WORD m_star[] = { 3, 2, 0, -3, 0, 3, 2, 3, 2, -3, -2, 2, 3, -2, -3,
 static const WORD m_square[] = { 1, 5, -4, -3, 4, -3, 4, 3, -4, 3, -4, -3 };
 static const WORD m_cross[] = { 2, 2, -4, -3, 4, 3, 2, -4, 3, 4, -3 };
 static const WORD m_dmnd[] = { 1, 5, -4, 0, 0, -3, 4, 0, 0, 3, -4, 0 };
-
 
 
 /*
@@ -51,7 +49,6 @@ void vdi_vsm_height(Vwk * vwk)
 }
 
 
-
 /*
  * vdi_vsm_type - Sets the current type of marker
  */
@@ -66,7 +63,6 @@ void vdi_vsm_type(Vwk * vwk)
 }
 
 
-
 /*
  * vdi_vsm_color - Set marker color
  */
@@ -78,7 +74,6 @@ void vdi_vsm_color(Vwk * vwk)
     INTOUT[0] = i;
     vwk->mark_color = MAP_COL[i];
 }
-
 
 
 /*
@@ -161,7 +156,6 @@ void vdi_v_pmarker(Vwk * vwk)
     vwk->line_beg = sav_beg;
     vwk->line_end = sav_end;
 }
-
 
 
 /*

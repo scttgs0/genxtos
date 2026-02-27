@@ -34,20 +34,20 @@
  #else
      UWORD color = 0;                    /* clear the pixel value accumulator. */
      WORD plane = v_planes;
- 
+
      while(1) {
          /* test the bit. */
          if ( *--addr & mask )
              color |= 1;         /* if 1, set color accumulator bit. */
- 
+
          if ( --plane == 0 )
              break;
- 
+
          color <<= 1;            /* shift accumulator for next bit_plane. */
      }
- 
+
      return color;       /* this is the color we are searching for */
- #endif    
+ #endif
  }
 
 
@@ -115,7 +115,7 @@ pixelread(const WORD x, const WORD y)
  pixelput(const WORD x, const WORD y)
  {
      UWORD *addr;
-  
+
  #if CONF_WITH_VDI_16BIT
      if (TRUECOLOR_MODE)
      {
@@ -129,7 +129,7 @@ pixelread(const WORD x, const WORD y)
          return;
      }
  #endif
- 
+
      /* convert x,y to start address */
      addr = get_start_addr(x, y);
      /* co-ordinates can wrap, but cannot write outside screen,
@@ -138,17 +138,17 @@ pixelread(const WORD x, const WORD y)
      if (addr < (UWORD*)v_bas_ad || addr >= get_start_addr(V_REZ_HZ, V_REZ_VT)) {
          return;
      }
- 
+
  #if CONF_WITH_CHUNKY8
      *((UBYTE*)addr) = (UBYTE)(INTIN[0]);
  #else
      UWORD color;
      UWORD mask;
      int plane;
- 
+
      mask = 0x8000 >> (x&0xf);   /* initial bit position in WORD */
      color = INTIN[0];           /* device dependent encoded color bits */
- 
+
      for (plane = v_planes; plane; plane--) {
          if (color&0x0001)
              *addr++ |= mask;
@@ -156,9 +156,9 @@ pixelread(const WORD x, const WORD y)
              *addr++ &= ~mask;
          color >>= 1;
      }
- #endif    
+ #endif
  }
- 
+
 
 
 #if CONF_WITH_VDI_16BIT
@@ -185,7 +185,6 @@ UWORD search_to_right16(const VwkClip *clip, WORD x, const UWORD search_col, UWO
 }
 
 
-
 /*
  * search_to_left16() - Truecolor version of search_to_left()
  */
@@ -207,7 +206,6 @@ UWORD search_to_left16(const VwkClip *clip, WORD x, const UWORD search_col, UWOR
 
     return x + 1;
 }
-
 
 
 /*
@@ -238,7 +236,6 @@ WORD end_pts16(const VwkClip *clip, WORD x, WORD y, UWORD search_color, BOOL see
 #endif
 
 
-
 UWORD
 search_to_right (const VwkClip * clip, WORD x, UWORD mask, const UWORD search_col, UWORD * addr)
 {
@@ -265,7 +262,6 @@ search_to_right (const VwkClip * clip, WORD x, UWORD mask, const UWORD search_co
 }
 
 
-
 UWORD
 search_to_left (const VwkClip * clip, WORD x, UWORD mask, const UWORD search_col, UWORD * addr)
 {
@@ -290,7 +286,6 @@ search_to_left (const VwkClip * clip, WORD x, UWORD mask, const UWORD search_col
 
     return x + 1;       /* output x coord + 1 to endxleft. */
 }
-
 
 
 /*
@@ -328,8 +323,8 @@ end_pts(const VwkClip *clip, WORD x, WORD y, UWORD search_color, BOOL seed_type,
 
     /* convert x,y to start address and bit mask */
     addr = get_start_addr(x, y);
-#if CONF_WITH_CHUNKY8    
-#else    
+#if CONF_WITH_CHUNKY8
+#else
     addr += v_planes;                   /* start at highest-order bit_plane */
     mask = 0x8000 >> (x & 0x000f);   /* fetch the pixel mask. */
 #endif

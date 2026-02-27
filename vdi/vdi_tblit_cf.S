@@ -52,9 +52,6 @@
 	.globl	_normal_blit
 
 
-
-
-
 |;;           .extern _SOURCEX         | [18]
 |;;           .extern _SOURCEY         | [19]
 |;;           .extern _LITEMASK        | [20]
@@ -68,10 +65,6 @@
 |;;           .extern _SCRTCHP         | [26]
 | 236 "vdi/vdi_tblit.S"
 |;;           .text                    | [28]
-
-
-
-
 
 
 _normal_blit:
@@ -88,11 +81,6 @@ _normal_blit:
       rts                              | [42]
 
 |;;           .text                    | [44]
-
-
-
-
-
 
 
 |;;                   .even            | [52]
@@ -206,7 +194,6 @@ norm_blt:
       jpl      do_rot                  | [108]
 
 
-
 |;;   neg.w     d1                     | [112]
 	neg.l    %d5
 |;;   ori.w     #0x8000,d1             | [113]
@@ -232,7 +219,6 @@ do_rot:
 	not.l    %d5
 |;;   move.w    d0,-40(a6)             | [122]
 	move.w   %d5,(-40,%a6)
-
 
 
 get_mask:
@@ -284,7 +270,6 @@ get_mask:
       jhi      doub_des                | [148]
 
 
-
 |;;   add.w     d0,d0                  | [152]
 	move.w   %d0,%d5
 	add.l    %d0,%d5
@@ -305,7 +290,6 @@ get_mask:
       jra      msk_done                | [158]
 
 
-
 doub_des:
       move.w   %d0,%d1                 | [163]
 |;;   lsr.w     #4,d1                  | [164]
@@ -316,7 +300,6 @@ doub_des:
 	move.w   %d5,%d1
       move.w   %d1,%d3                 | [166 NE]
       jne      mlt_dest                | [167]
-
 
 
       move.w   (-24,%a6),%d1           | [171]
@@ -399,7 +382,6 @@ plane_loop:
 	addx.l   %d1,%d1
 
 
-
       lea      toptable,%a4            | [216]
 	move.w   %d1,%d0
 |;;   move.b    wrmappin-toptable(a4,d0.w),d0 | [217]
@@ -416,13 +398,11 @@ plane_loop:
 	movea.l  (twoptble-toptable,%a4,%a0.l*1),%a4
 
 
-
       move.w   (-96,%a6),%d0           | [226 EQ]
       jeq      wrt_char                | [227]
 
       btst     #1,%d0                  | [229 EQ]
       jeq      no_lite                 | [230]
-
 
 
 |;;   move.w    _LITEMASK,-78(a6)      | [234]
@@ -442,7 +422,6 @@ no_lite:
       jeq      no_thick                | [246]
 
 
-
       clr.w    (-82,%a6)               | [250]
 
       move.l   %a5,(-48,%a6)           | [252]
@@ -457,7 +436,6 @@ no_lite:
 no_thick:
       btst     #2,%d0                  | [262 EQ]
       jeq      wrt_char                | [263]
-
 
 
 |;;   move.w    _SKEWMASK,-80(a6)      | [267]
@@ -538,8 +516,6 @@ blttype:
 	.long	sgl_loop,dbl_loop,mlt_rite,mlt_left
 
 
-
-
 	.p2align 1,0
 sgl_loop:
       move.w   (-38,%a6),%d2           | [320]
@@ -581,10 +557,8 @@ sgl_rtn:
 	jeq      _PA_349_
 	subq.l   #1,%d3
 	jra      sgl_lp
-	_PA_349_:         
+	_PA_349_:
       jra      next_plane              | [351]
-
-
 
 
 dbl_loop:
@@ -666,11 +640,8 @@ dbl_2wrd:
 	jeq      _PA_404_
 	subq.l   #1,%d3
 	jra      dbl_lp
-	_PA_404_:         
+	_PA_404_:
       jra      next_plane              | [406]
-
-
-
 
 
 left_loop:
@@ -699,11 +670,6 @@ mlt_left:
       move.l   %a0,%d6                 | [423]
       move.l   %a1,%d7                 | [424]
       move.w   (-28,%a6),(-44,%a6)     | [425]
-
-
-
-
-
 
 
       move.l   (%a0)+,%d0              | [433]
@@ -738,7 +704,6 @@ lft_lfrng:
 	move.l   (%a7)+,%d0
 
 
-
 word_lef:
 |***	SAVE	d3/d5	***
 	lea      -8(%a7),%a7
@@ -748,9 +713,6 @@ word_lef:
 	move.w   %d4,%d3
 	and.l    %d2,%d3
       move.w   (%a0)+,%d0              | [462]
-
-
-
 
 
       swap     %d0                     | [468]
@@ -820,11 +782,8 @@ lft_rfrng:
 	jeq      _PA_505_
 	subq.l   #1,%d3
 	jra      left_loop
-	_PA_505_:         
+	_PA_505_:
       jra      next_plane              | [507]
-
-
-
 
 
 rite_loop:
@@ -854,7 +813,6 @@ mlt_rite:
       move.l   %a1,%d7                 | [525]
       move.w   (-28,%a6),(-44,%a6)     | [526]
       move.w   (%a0)+,%d0              | [527]
-
 
 
       swap     %d0                     | [531]
@@ -887,7 +845,6 @@ rgt_lfrng:
 	move.l   (%a7)+,%d0
 
 
-
 word_rit:
 |***	SAVE	d3/d5	***
 	lea      -8(%a7),%a7
@@ -898,8 +855,6 @@ word_rit:
 	and.l    %d2,%d3
       swap     %d0                     | [558]
       move.w   (%a0)+,%d0              | [559]
-
-
 
       swap     %d0                     | [563]
 
@@ -965,7 +920,7 @@ rgt_rfrng:
 	jeq      _PA_597_
 	subq.l   #1,%d3
 	jra      rite_loop
-	_PA_597_:         
+	_PA_597_:
       jra      next_plane              | [599]
 | 871 "vdi/vdi_tblit.S"
 top0:
@@ -1474,7 +1429,7 @@ thkoplp:
 	jeq      _PA_808_
 	subq.l   #1,%d6
 	jra      thkoplp
-	_PA_808_:         
+	_PA_808_:
 
       move.w   %d1,%d0                 | [811]
       swap     %d1                     | [812]
@@ -1515,7 +1470,7 @@ thkopwlp:
 	jeq      _PA_830_
 	subq.l   #1,%d6
 	jra      thkopwlp
-	_PA_830_:         
+	_PA_830_:
 
       move.w   %d1,%d5                 | [833]
       swap     %d1                     | [834]
@@ -1639,7 +1594,7 @@ thkopwl:
 	jeq      _PA_899_
 	subq.l   #1,%d6
 	jra      thkopwl
-	_PA_899_:         
+	_PA_899_:
 
       move.w   %d1,%d5                 | [902]
       swap     %d1                     | [903]
@@ -1776,7 +1731,6 @@ begn_ror:
       jra      ror_add                 | [962]
 
 
-
 nxt_word:
       move.w   %d2,(-36,%a6)           | [967]
       swap     %d2                     | [968]
@@ -1796,10 +1750,6 @@ nxt_word:
 	ori.l    #(0xFFFF&0x8000),%d0
       move.w   %d0,(-42,%a6)           | [976]
       jra      no_shift                | [977]
-
-
-
-
 
 
 skewopw:

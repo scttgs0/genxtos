@@ -258,7 +258,6 @@ void conout_move_cursor(int x, int y)
 }
 
 
-
 /*
  * conout_ascii_out - prints an ascii character on the screen
  *
@@ -293,7 +292,7 @@ void conout_ascii_out(int ch)
         CHAR_ADDR cell;
         UWORD y = v_cur_cy;
 
-        /* perform cell carriage return. */        
+        /* perform cell carriage return. */
         v_cur_cx = 0;                   /* set X to first cell in line */
 
         /* perform cell line feed. */
@@ -305,7 +304,7 @@ void conout_ascii_out(int ch)
             cell = conout->cell_addr(0, y); /* cursor stays on (current) last line */
             conout_scroll_up(0);            /* scroll from top of screen */
         }
-        v_cur_ad = cell;                /* update cursor address */   
+        v_cur_ad = cell;                /* update cursor address */
     }
 
     if (conout->cursor_moved)
@@ -317,7 +316,7 @@ void conout_ascii_out(int ch)
         conout_paint_cursor();          /* display cursor. */
 #else
         neg_cell(v_cur_ad);             /* display cursor. */
-#endif        
+#endif
         CURSOR_FLASH_UP;                /* set state flag (cursor on). */
         CURSOR_ENABLE;                  /* end of critical section. */
 
@@ -362,7 +361,7 @@ void conout_scroll_up(UWORD top_line)
     dst = conout->cell_addr(0, top_line);
     src = conout->cell_addr(0, top_line + 1);
     count = (ULONG)v_cel_wr * (v_cel_my - top_line);
-    conout->scroll_up(src, dst, count);   
+    conout->scroll_up(src, dst, count);
 }
 
 
@@ -428,7 +427,7 @@ void conout_disable_cursor(void)
 {
     if (!CURSOR_IS_ENABLED)
         return;                         /* if already invisible, just return */
-    
+
     CURSOR_DISABLE;                 /* make invisible! */
 
     /* see, if flashing is disabled */
@@ -475,6 +474,6 @@ void conout_blink_cursor(void)
     else if (CURSOR_IS_ENABLED && CURSOR_FLASH_ENABLE && (--v_cur_tim) == 0 )
     {
         v_cur_tim = v_period; /* reset timer */
-        CURSOR_FLASH_IS_UP ? conout_unpaint_cursor() : conout_paint_cursor(); /* toggle state*/ 
+        CURSOR_FLASH_IS_UP ? conout_unpaint_cursor() : conout_paint_cursor(); /* toggle state*/
     }
 }

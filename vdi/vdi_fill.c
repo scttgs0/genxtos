@@ -141,7 +141,6 @@ const UWORD HOLLOW = 0;
 const UWORD SOLID = 0xFFFF;
 
 
-
 /*
  * vdi_vsf_udpat - Set user-defined fill pattern
  */
@@ -165,7 +164,6 @@ void vdi_vsf_udpat(Vwk * vwk)
 }
 
 
-
 /*
  * vdi_vsf_interior - Set fill style
  */
@@ -178,7 +176,6 @@ void vdi_vsf_interior(Vwk * vwk)
     INTOUT[0] = vwk->fill_style = fs;
     st_fl_ptr(vwk);
 }
-
 
 
 /* S_FILL_INDEX: */
@@ -200,7 +197,6 @@ void vdi_vsf_style(Vwk * vwk)
 }
 
 
-
 /* S_FILL_COLOR: */
 void vdi_vsf_color(Vwk * vwk)
 {
@@ -211,7 +207,6 @@ void vdi_vsf_color(Vwk * vwk)
     INTOUT[0] = fc;
     vwk->fill_color = MAP_COL[fc];
 }
-
 
 
 /* ST_FILLPERIMETER: */
@@ -225,7 +220,6 @@ void vdi_vsf_perimeter(Vwk * vwk)
         vwk->fill_per = TRUE;
     }
 }
-
 
 
 /*
@@ -285,7 +279,6 @@ static BOOL clipbox(const VwkClip *clip, Rect *rect)
 }
 
 
-
 /*
  * vdi_vr_recfl - draw filled rectangle
  */
@@ -313,7 +306,6 @@ void vdi_vr_recfl(Vwk * vwk)
 }
 
 
-
 /*
  * vdi_vqf_attributes - Inquire current fill area attributes
  */
@@ -328,7 +320,6 @@ void vdi_vqf_attributes(Vwk * vwk)
     *pointer++ = vwk->wrt_mode + 1;
     *pointer = vwk->fill_per;
 }
-
 
 
 /*
@@ -379,7 +370,6 @@ st_fl_ptr(Vwk * vwk)
 }
 
 
-
 /*
  * bub_sort - sorts an array of words
  *
@@ -405,7 +395,6 @@ bub_sort (WORD * buf, WORD count)
         }
     }
 }
-
 
 
 /*
@@ -551,7 +540,6 @@ void clc_flit(const VwkAttrib *attr, const VwkClip *clipper, const Point *point,
 }
 
 
-
 /*
  * polygon - draw a filled polygon
  */
@@ -609,7 +597,6 @@ polygon(Vwk * vwk, Point * ptsin, int count)
 }
 
 
-
 /*
  * vdi_v_fillarea - Fill an area
  */
@@ -638,7 +625,6 @@ static void crunch_queue(void)
     if (qptr >= qtop)
         qptr = qbottom;
 }
-
 
 
 /*
@@ -700,7 +686,6 @@ static WORD get_seed(const VwkAttrib *attr, const VwkClip *clip,
 
     return 0;           /* we didn't put a seed in the Q */
 }
-
 
 
 /* common function for line-A linea_fill() and VDI d_countourfill() */
@@ -822,7 +807,6 @@ void contourfill(const VwkAttrib * attr, const VwkClip *clip)
 }                               /* end of fill() */
 
 
-
 /*
  * no_abort
  *
@@ -838,7 +822,6 @@ static WORD no_abort(void)
 }
 
 
-
 /* VDI version */
 void vdi_v_contourfill(Vwk * vwk)
 {
@@ -848,7 +831,6 @@ void vdi_v_contourfill(Vwk * vwk)
     Vwk2Attrib(vwk, &attr, vwk->fill_color);
     contourfill(&attr, VDI_CLIP(vwk));
 }
-
 
 
 void vdi_v_get_pixel(Vwk * vwk)
@@ -872,7 +854,6 @@ void vdi_v_get_pixel(Vwk * vwk)
     INTOUT[0] = pel;
     INTOUT[1] = REV_MAP_COL[pel];
 }
-
 
 
 /*

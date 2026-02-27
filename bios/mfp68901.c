@@ -32,7 +32,6 @@ void mfp68901_reset_regs(MFP *mfp)
 }
 
 
-
 void mfp68901_disable_interrupt(MFP *mfp, WORD num)
 {
     UBYTE mask;

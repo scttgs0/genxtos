@@ -12,7 +12,6 @@
  */
 
 
-
 /*
  * Well, this can be made nicer later, if we have much time... :-)
  */
@@ -339,7 +338,7 @@ WORD initinfo(ULONG *pshiftbits)
 #endif
     pair_end();
 
-    
+
 #if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
     pair_start(_("Machine")); cprintf("%s rev.%s", info.model_name, info.pcb_revision_name); pair_end();
 #if defined(MACHINE_A2560U)
@@ -467,7 +466,7 @@ WORD initinfo(ULONG *pshiftbits)
 #else
     cprintf("\033k\033E");
 #endif
- 
+
     *pshiftbits = shiftbits;
     return dev;
 }

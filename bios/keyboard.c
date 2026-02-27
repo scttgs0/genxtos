@@ -237,7 +237,7 @@ void kbd_int(UBYTE scancode)
             break;
         case KEY_CTRL:
             shifty &= ~MODE_CTRL;       /* clear bit */
-            break;          
+            break;
         case KEY_ALT:
             shifty &= ~MODE_ALT;        /* clear bit */
             if (mouse_emulation_is_active())
@@ -263,7 +263,7 @@ void kbd_int(UBYTE scancode)
         case KEY_ALTGR:
             shifty &= ~MODE_ALTGR;       /* clear bit */
             break;
-#endif  
+#endif
         case KEY_EMULATE_LEFT_BUTTON:
             shifty &= ~MODE_MOUSEL;       /* clear bit */
             key_repeat_stop();
@@ -317,7 +317,7 @@ void kbd_int(UBYTE scancode)
         case KEY_ALTGR:
             shifty |= MODE_ALTGR; /* set bit */
             break;
-#endif        
+#endif
     default:
         modifier = FALSE;
         break;
@@ -476,9 +476,9 @@ static WORD convert_scancode(UBYTE *scancodeptr)
     case KEY_BACKSPACE:
     case KEY_TAB:
 #if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-#else    
+#else
     case KEY_UNDO:
-#endif    
+#endif
         return current_keytbl.norm[scancode];
     }
 
@@ -727,6 +727,3 @@ static void key_repeat_do(void)
     /* Reload the decounter. The key will repeat again until some key up */
     kb_ticks = kb_repeat;
 }
-
-
-
