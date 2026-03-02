@@ -13,8 +13,6 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-/* #define ENABLE_KDEBUG */
-
 #include "asmdefs.h"
 
 // ==== References ===========================================================
@@ -171,7 +169,7 @@ hide_mouse:
 undraw_sprite:
         move.l  a2,-(sp)        /* save area ptr */
 #ifdef MACHINE_A2560U
-#else        
+#else
         jsr     _linea_sprite_hide_atari
 #endif
         addq.l  #4,sp
@@ -185,7 +183,7 @@ draw_sprite:
 #ifdef MACHINE_A2560U
 #else
         jsr     _linea_sprite_show_atari
-#endif        
+#endif
         lea     12(sp),sp
         rts
 

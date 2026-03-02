@@ -13,15 +13,12 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-/* #define ENABLE_KDEBUG */
-
 #include <stdint.h>
 #include <stdbool.h>
 #include "ps2.h"
 
 /* WARNING enabling this causes crashes ! so leave it disabled
  * unless you want to trouble shoot PS/2 initialisation */
-/*#define ENABLE_KDEBUG*/
 #ifdef ENABLE_KDEBUG
 	void a2560_debugnl(const char *s,...);
 #else

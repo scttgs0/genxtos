@@ -15,8 +15,6 @@
  * Note: CHS addressing is now supported in addition to LBA.
  */
 
-/* #define ENABLE_KDEBUG */
-
 #include "emutos.h"
 #include "asm.h"
 #include "blkdev.h"
@@ -783,7 +781,7 @@ static void ide_detect_devices(UWORD ifnum)
         ide_select_device(interface,i);
 
 #if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
-        /* We get aa55. Spec says sector number and count should be 01. FPGA bug ? */    
+        /* We get aa55. Spec says sector number and count should be 01. FPGA bug ? */
 #else
         if (get_start_count(interface) == 0x0101)
 #endif
@@ -798,7 +796,7 @@ static void ide_detect_devices(UWORD ifnum)
             else
 #endif
                 info->dev[i].type = ide_decode_type(status,signature);
-          
+
         }
     }
 

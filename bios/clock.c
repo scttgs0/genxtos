@@ -13,8 +13,6 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-/* #define ENABLE_KDEBUG */
-
 #include "emutos.h"
 #include "clock.h"
 #include "ikbd.h"
@@ -968,7 +966,7 @@ static volatile WORD iclk_ready;
 /* EmuTOS's ikbdsys also puts the buffer (containing ymdhms) on the stack */
 void clockvec(UBYTE *buf)
 {
-    
+
     UBYTE *b = 1 + ((UBYTE *)&iclkbuf);
 
     memmove((char*)b, buf, 6);

@@ -20,8 +20,6 @@
  * If we ever add a 16x32 font, the code will need changing!
  */
 
-/* #define ENABLE_KDEBUG */
-
 #include "emutos.h"
 
 #if !defined(MACHINE_A2560U) && !defined(MACHINE_A2560K) && !defined(MACHINE_A2560M) && !defined(MACHINE_A2560X) && !defined(MACHINE_GENX)

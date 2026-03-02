@@ -17,8 +17,6 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-#define ENABLE_KDEBUG
-
 #include "emutos.h"
 #include "aciavecs.h"
 #include "biosext.h"
@@ -77,7 +75,6 @@
 #if WITH_CLI
 #include "../cli/clistub.h"
 #endif
-
 
 
 /*==== Defines ============================================================*/
@@ -454,12 +451,14 @@ static void bios_init(void)
     KDEBUG(("kbd_init()\n"));
     kbd_init();         /* init keyboard, disable mouse and joystick */
 
+#if 0
 #ifdef MACHINE_A2560K
-    KDEBUG("kbdmo_init()\n");
+    KDEBUG(("kbdmo_init()\n"));
     kbdmo_init();
 #else    /* midi not working of A2560K, skip */
     KDEBUG(("midi_init()\n"));
     midi_init();        /* init MIDI acia so that kbd acia irq works */
+#endif
 #endif
 
     KDEBUG(("init_acia_vecs()\n"));
@@ -494,7 +493,7 @@ static void bios_init(void)
 #endif
 
     KDEBUG(("delay_calibrate done\n"));
-	
+
     /* Initialize the DSP.  Since we currently use the system timer
      * in dsp_execboot(), which is called from dsp_init(), the latter
      * must be called *after* system timer interrupts are enabled.
@@ -629,7 +628,7 @@ static void bios_init(void)
 
 #endif
 
-	
+
     KDEBUG(("bios_init() end\n"));
 }
 
@@ -888,9 +887,9 @@ void biosmain(void)
 
     /* boot eventually from a block device (floppy or harddisk) */
     blkdev_boot();
-
+//#if 0 // HACK:
     Dsetdrv(bootdev);           /* Set boot drive */
-
+//#endif
     init_default_environment(); /* Build default environment string */
 
 #if ENABLE_RESET_RESIDENT
@@ -954,7 +953,6 @@ void biosmain(void)
     kcprintf(_("System halted!\n"));
     halt();
 }
-
 
 
 /**
@@ -1137,7 +1135,6 @@ static LONG bios_4(WORD r_w, UBYTE *adr, WORD numb, WORD first, WORD drive, LONG
     return ret;
 }
 #endif
-
 
 
 /**
@@ -1327,7 +1324,6 @@ static LONG bios_d(BOOL fromTop, ULONG size)
 }
 static LONG bios_e(void) { return disk_drvrem(); }
 #endif
-
 
 
 /**

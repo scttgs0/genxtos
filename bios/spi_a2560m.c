@@ -12,9 +12,7 @@
 
 //#define a2560_debugnl(...)
 
-/* #define ENABLE_KDEBUG */
-
-#define SDx_CS				0x01		// 1 = Enable 
+#define SDx_CS				0x01		// 1 = Enable
 #define SDx_SLOW 			0x02		// 1 = Slow 400Khz, 0 = 25Mhz
 #define SDx_BUSY			0x80		// 1 = Busy
 
@@ -46,14 +44,14 @@ void dump_spi(void) {
 static void spi_send_byte(const SD *sd, uint8_t data) {
     //a2560_debugnl("spi_send_byte");
     *sd->data = data; // Set the Data in the Transmit Register
-    SD_Wait_SDx_Busy(sd); // Wait for the transmit to be over with 
+    SD_Wait_SDx_Busy(sd); // Wait for the transmit to be over with
 }
 
 
 static uint8_t spi_recv_byte(const SD *sd) {
     //a2560_debugnl("spi_recv_byte");
     *sd->data = 0xff; // Set the Data in the Transmit Register
-    SD_Wait_SDx_Busy(sd); // Wait for the transmit to be over with 
+    SD_Wait_SDx_Busy(sd); // Wait for the transmit to be over with
     uint8_t ret = *sd->data;
     //recvbuf[recvbufi++] = ret;
     return ret;			/* Store a received byte */

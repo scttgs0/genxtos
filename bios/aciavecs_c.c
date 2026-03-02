@@ -11,8 +11,6 @@
 #include "midi.h"
 #include "string.h"
 
-/* #define ENABLE_KDEBUG */
-
 void just_rts(void);
 void int_acia(void);   // ACIA interrupt handler
 void int_acia_c(void); // C portion of the ACIA interrupt handler

@@ -1,7 +1,5 @@
 /* A2560 Bitmap console driver when using the 1 bit per pixel mode */
 
-#define ENABLE_KDEBUG
-
 #include "emutos.h"
 
 #if defined(MACHINE_A2560M)

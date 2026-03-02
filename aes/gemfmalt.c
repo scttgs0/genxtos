@@ -16,8 +16,6 @@
 *       -------------------------------------------------------------
 */
 
-/* #define ENABLE_KDEBUG */
-
 #include "emutos.h"
 #include "struct.h"
 #include "obdefs.h"
@@ -369,7 +367,7 @@ WORD fm_alert(WORD defbut, char *palstr)
     /*
      * turn on the mouse and set the mouse owner.  the latter is required
      * for DAs to be able to issue form_alert()s.
-     * 
+     *
      * if we don't update mouse ownership, the desktop will remain the
      * mouse owner, and the system will queue any mouse clicks to the
      * desktop's evnt_multi(), rather than the evnt_multi() issued by

@@ -13,8 +13,6 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-/* #define ENABLE_KDEBUG */
-
 #include "emutos.h"
 #include "biosdefs.h"
 #include "mfp.h"
@@ -68,7 +66,7 @@ void delay_init(void)
 #elif defined(MACHINE_A2560U)
     /* The A2560U's 68EC000 is running at 20MHz while LOOPS_68000 is for 16MHz*/
     loopcount_1_msec = LOOPS_68000 * 5L / 4;
-#elif defined(MACHINE_A2560K) 
+#elif defined(MACHINE_A2560K)
     /* The A2560K's 68040V is running at 33MHz while LOOPS_68030 is for 32MHz*/
     loopcount_1_msec = LOOPS_68030 * 33L / 32;
 #elif defined(MACHINE_A2560M) || defined(MACHINE_A2560X)

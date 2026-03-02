@@ -10,8 +10,6 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-/* #define ENABLE_KDEBUG */
-
 #include "emutos.h"
 #include "disk.h"
 #include "asm.h"
@@ -360,13 +358,13 @@ SPI_DRIVER *spi_driver;
 	KDEBUG(("Calling clock_ident\n"));
     spi_driver->clock_ident();
 	KDEBUG(("Wait 1ms\n"));
-	
+
     /* wait at least 1msec */
     for (i=0;i<10;i++) /* FatFS waits 10ms but EmuTOS only waits 1ms */
         DELAY_1_MSEC;
 
 	KDEBUG(("74 dummry clocks\n"));
-	
+
     /* send at least 74 dummy clocks with CS unasserted (high) */
     spi_driver->cs_unassert();
 	KDEBUG(("unasserted\n"));
@@ -1018,7 +1016,7 @@ static const SPI_DRIVER *get_spi_driver_for_drive(UWORD drv)
         case 1: return &spi_a2560m_sd0;
         default: return NULL; /* Not supposed to happen */
     }
-#else	
+#else
 #error Must provide a SD card driver
 #endif
 }

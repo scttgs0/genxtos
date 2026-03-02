@@ -16,8 +16,6 @@
  * If we ever add a 16x32 font, the code will need changing!
  */
 
-/* #define ENABLE_KDEBUG */
-
 #include "emutos.h"
 
 #if defined(MACHINE_FOENIX)
@@ -62,7 +60,7 @@ static int get_char_source(unsigned char c, CHAR_ADDR *src)
 
 
 static void cell_xfer(CHAR_ADDR src, CHAR_ADDR dst)
-{    
+{
     UWORD fg;
     UWORD bg;
 
@@ -90,11 +88,11 @@ static void cell_xfer(CHAR_ADDR src, CHAR_ADDR dst)
     for (j = v_cel_ht; --j>=0 ; )
     {
         if ((bsrc = *(src.pxaddr))) {
-        
+
 #if 0
         int i;
         for (i = 0; i < 8/*font width*/; i++)
-        {                
+        {
             dst.pxaddr[i] = bsrc & 0x80 ? fg : bg;
             bsrc <<= 1;
         }

@@ -1,6 +1,4 @@
 
-#define ENABLE_KDEBUG
-
 #include "emutos.h"
 
 #if defined(MACHINE_A2560M)

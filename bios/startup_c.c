@@ -14,8 +14,6 @@
  * about the stack setup
  */
 
-/* #define ENABLE_KDEBUG 1 */
-
 #include "emutos.h"
 #include "amiga.h"
 #include "bios.h"
@@ -63,10 +61,10 @@ void startup(void) {
     initialize_cpu();
 
     run_user_reset_code();
-	
+
     meminit(startup_stage2);
-    // meminit returns into startup_stage2 in a hardcoded way, because we can't rely on the stack or 
-    // registes to remember a return address: all the memory is clobbererd and registers as well.
+    // meminit returns into startup_stage2 in a hardcoded way, because we can't rely on the stack or
+    // registers to remember a return address: all the memory is clobbered and registers as well.
     // Note: I tried using the blitter's halftone memory as temporary memory but that didn't work.
 
     // IE DONT PUT ANYTHING HERE BECAUSE IT WILL NEVER BE CALLED !
@@ -74,7 +72,7 @@ void startup(void) {
 
 // This is run first thing, and can be used to initialize stuff that must be as very top priority.
 // If these can be done later, they doesn't belong here.
-// At this point the stack / memory may not be functiononal yet !
+// At this point the stack / memory may not be functional yet !
 // So functions must jump back to the address provided in a6
 static ALWAYS_INLINE void asap(void) {
     KDEBUG(("asap()\n"));
@@ -108,7 +106,7 @@ void ALWAYS_INLINE ensure_minimum_ram_setup(void) {
 
     if (*((UBYTE*)ST_MMU_CONFIGURATION) >= 0xc)
         *((UBYTE*)ST_MMU_CONFIGURATION) = 5;
-#endif  
+#endif
 
 #ifdef __mcoldfire__
     // This has two parts: one to setup a stack (so C code can be called) and the other as C code

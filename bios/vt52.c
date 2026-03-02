@@ -19,8 +19,6 @@
  * - Manage text cursor visibility / blinking.
  */
 
-// #define ENABLE_KDEBUG
-
 #include "emutos.h"
 #include "lineavars.h"
 #include "font.h"

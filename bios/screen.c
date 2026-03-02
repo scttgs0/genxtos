@@ -13,15 +13,13 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-#define ENABLE_KDEBUG
-
 #include "emutos.h"
 #include "asm.h"
 #include "bios.h"
 #include "biosext.h" // video_ram_addr
 #include "biosmem.h"
 #include "has.h"
-#include "linea.h" // V_REZ_HZ / 
+#include "linea.h" // V_REZ_HZ /
 #include "bdosbind.h" // Srealloc() FIXME layering breakage: XBIOS calling GEMDOS
 #include "screen.h"
 #include "tosvars.h"
@@ -291,9 +289,9 @@ static void screen_init_services(UWORD planes, UWORD xrez, UWORD yrez)
      /* Re-initialize line-a, VT52 etc: */
      linea_init(planes, xrez, yrez);
      vt52_init();
- 
+
      /* Restart VBL processing */
-     vblsem++; 
+     vblsem++;
 }
 
 
@@ -330,11 +328,11 @@ void setpalette(const UWORD *palettePtr)
 
 /**
  * Set the palette
- * 
+ *
  * This function is called by the VBL interrupt handler to set the palette.
  * It is used to set the palette for the Falcon and the Shifter.
  * It is also used to set the palette for the VICKY.
- * 
+ *
  * It is called after the Setpalette xbios call is made.
  */
 void screen_do_set_palette(const UWORD *new_palette) {

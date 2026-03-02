@@ -10,8 +10,6 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-/* #define ENABLE_KDEBUG */
-
 #include "emutos.h"
 #include "bios.h" /* boot_status */
 #include "cookie.h"
@@ -856,7 +854,7 @@ const char * machine_name(void)
     struct foenix_system_info_t info;
 
     a2560_system_info(&info);
- 
+
     return info.model_name;
 #else
 

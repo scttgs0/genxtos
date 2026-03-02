@@ -16,8 +16,6 @@
  * If we ever add a 16x32 font, the code will need changing!
  */
 
-//#define ENABLE_KDEBUG
-
 #include "emutos.h"
 
 #if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
@@ -94,7 +92,7 @@ static int get_char_source(unsigned char c, CHAR_ADDR *src)
 static void cell_xfer(CHAR_ADDR src, CHAR_ADDR dst)
 {
     R8(VICKY_TEXT+dst.cellno) = src.cellno;
-    
+
     if (v_stat_0 & M_REVID)
         vicky->text_memory->color[dst.cellno] = v_col_bg << 4 | v_col_fg;
     else

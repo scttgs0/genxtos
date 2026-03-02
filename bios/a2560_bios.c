@@ -10,8 +10,6 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-#define ENABLE_KDEBUG
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdarg.h>
@@ -253,7 +251,11 @@ void a2560_bios_kbd_init(void)
     /* We're using the VBL counter: that may depend on the resolution, if it changes,
      * and of the VBLs are blocked, the counter will not work. But after init, when everything
      * is setup and we're only reacting to interrupts, it shouldn't matter. */
-#ifndef MACHINE_A2560K
+#if 0 //#ifdef MACHINE_A2560K
+    fnx_kbd_init((uint32_t*)&frclock, 60);
+    a2560k_set_key_up_handler(kbd_int);
+    a2560k_set_key_down_handler(kbd_int);
+#else
     fnx_kbd_init((uint32_t*)&frclock, 60);
     fnx_ps2_set_key_up_handler(kbd_int);
     fnx_ps2_set_key_down_handler(kbd_int);

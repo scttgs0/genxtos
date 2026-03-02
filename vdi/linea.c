@@ -11,8 +11,6 @@
  * option any later version.  See doc/license.txt for details.
  */
 
- /* #define ENABLE_KDEBUG */
-
 #include "emutos.h"
 #include "intmath.h"
 #include "linea.h"
@@ -58,7 +56,7 @@ void linea_resolution_changed(void)
 #else
     BYTES_LIN = v_lin_wr = V_REZ_HZ / 8 * v_planes;
 #endif
-    
+
     linea_max_x = V_REZ_HZ - 1;
     linea_max_y = V_REZ_VT - 1;
 

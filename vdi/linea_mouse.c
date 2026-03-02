@@ -11,8 +11,6 @@
  * option any later version.  See doc/license.txt for details.
  */
 
-/* #define ENABLE_KDEBUG */
-
 #include "emutos.h"
 #include "asm.h"
 #include "aesdefs.h"
@@ -63,7 +61,7 @@ static void vbl_draw(void);
 
 
 void linea_mouse_init(void)
-{    
+{
     /* Mouse settings */
     HIDE_CNT = 1;               /* mouse is initially hidden */
     GCURX = V_REZ_HZ / 2;       /* initialize the mouse to center */
@@ -100,10 +98,10 @@ void linea_mouse_deinit(void)
 {
     if (!linea_mouse_inited)
         return;
-    
+
 #if defined(MACHINE_A2560U) || defined(MACHINE_A2560K) || defined(MACHINE_A2560M) || defined(MACHINE_A2560X) || defined(MACHINE_GENX)
     // On the Foenix, VICKY moves the mouse automatically as part of processing PS/2 packets.
-#else    
+#else
     vblqueue[0] = 0L;
 #endif
 

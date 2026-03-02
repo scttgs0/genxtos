@@ -3,8 +3,6 @@
  * Licence: MIT
  */
 
-#define ENABLE_KDEBUG
-
 #include <stdint.h>
 #include "emutos.h"
 
@@ -29,10 +27,10 @@ static void spi_initialise(void)
 		KDEBUG(("Carte absente!\n"));
 	else
 		KDEBUG(("Carte présente.\n"));
-	
+
 	gavin_sdc_controller->control = 1; // Reset
 	gavin_sdc_controller->control = 0; // Reset
-	
+
     /* We use plain SPI and EmuTOS's SD layer on top of it */
     gavin_sdc_controller->transfer_type = SDC_TRANS_DIRECT;
 }

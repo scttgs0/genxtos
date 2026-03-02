@@ -30,8 +30,6 @@
  * of those conditions that are detected by EmuTOS.
  */
 
-/* #define ENABLE_KDEBUG */
-
 #include "emutos.h"
 #include "scsidriv.h"
 #include "biosdefs.h"
@@ -254,7 +252,7 @@ static HandleEntry *get_handle_entry(SCSIHandle handle)
 {
     int i;
     HandleEntry *h;
-    
+
     for (i = 0, h = handle_array; i < NUM_SCSIDRIV_HANDLES; i++, h++)
         if (handle == &h->features)
             return h;
